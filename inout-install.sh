@@ -10,9 +10,10 @@ if [ -d "$APP_DIR" ] ; then
 else
   echo "New track-inout Install"
   STATUS="New Install"
-  mkdir -p $APP_DIR
   echo "$APP_DIR Folder Created"
 fi
+
+mkdir -p $APP_DIR/media
 
 # Remember where this script was launched from
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
