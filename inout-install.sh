@@ -31,11 +31,11 @@ echo "1 - Downloading GitHub Repo files to $INSTALL_PATH"
 wget -O inout-install.sh -q --show-progress https://raw.githubusercontent.com/pageauc/track-inout/master/inout-install.sh
 if [ $? -ne 0 ] ;  then
   wget -O inout-install.sh https://raw.githubusercontent.com/pageauc/track-inout/master/inout-install.sh
-  wget -O track-inout.py https://raw.githubusercontent.com/pageauc/track-inout/master/track-inout.py
+  wget -O inout.py https://raw.githubusercontent.com/pageauc/track-inout/master/inout.py
   wget -O config.py https://raw.githubusercontent.com/pageauc/track-inout/master/config.py
   wget -O Readme.md https://raw.githubusercontent.com/pageauc/track-inout/master/Readme.md
 else
-  wget -O track-inout.py -q --show-progress https://raw.githubusercontent.com/pageauc/track-inout/master/track-inout.py
+  wget -O inout.py -q --show-progress https://raw.githubusercontent.com/pageauc/track-inout/master/inout.py
   wget -O config.py -q --show-progress https://raw.githubusercontent.com/pageauc/track-inout/master/config.py
   wget -O Readme.md -q --show-progress https://raw.githubusercontent.com/pageauc/track-inout/master/Readme.md
 fi
@@ -85,9 +85,9 @@ fi
 echo "-----------------------------------------------"
 echo "6 - $STATUS Complete"
 echo "-----------------------------------------------"
-echo ""
+echo " "
 echo "1. Reboot RPI if there are significant Raspbian system updates"
-echo "2. if config.py window_on=True then a monitor/TV display is needed
+echo "2. if config.py window_on=True then a monitor/TV display is needed"
 echo "   for the opencv window"
 echo "   Run inout.py with the Raspbian Desktop GUI running"
 echo "3. To start open file manager or a Terminal session then change to"
