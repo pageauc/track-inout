@@ -55,20 +55,22 @@ From SSH session, console or GUI desktop terminal session execute the following 
     ./inout.py
 
 On Windows make sure you have the latest python installed from https://www.python.org/downloads/
-Run track-inout.py from IDLE or if file association exists it can also be
-run from cmd prompt by double clicking on motion-track.py.  Use a text editor
-to modify config.py to view opencv window(s) and set other configuration
-variables.
+To install clone or download zip from project github web page https://github.com/pageauc/track-inout
+use 7zip to unzip file if required.   
+Run inout.py from IDLE or if file association exists it can also be
+run from cmd prompt by double clicking on inout.py.  Use a text editor
+To modify settings use a text editor to edit the config.py file 
+To view opencv window(s) on GUI desktop, edit config.py variable window_on=True.
 
 
 ### Trouble Shooting
 
 Edit the config.py file and set variable window_on = True so the opencv status windows can display camera
-motion images and a circle marking x,y coordinates as well as
-the threshold images.  The circle diameter can be change using CIRCLE_SIZE
+motion images and a circle marking x,y coordinates and optionally the
+opencv threshold window.  The circle diameter can be change using CIRCLE_SIZE
 variable.
-You can set window_on = False if you need to run from SSH session.  If
-verbose = True then status information will be displayed without a GUI desktop session.
+You can set window_on=False if you need to run from SSH session.  If
+verbose=True (default), then logging information will be displayed without a GUI desktop session.
 
 ### Credits
 Some of this code is based on a YouTube tutorial by
