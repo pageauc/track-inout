@@ -1,4 +1,4 @@
-# Config.py file for track-inout.py  Release 0.5
+# Config.py file for inout.py  Release 0.5
 
 # Display Settings
 # ----------------

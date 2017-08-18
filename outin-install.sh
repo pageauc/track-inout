@@ -14,6 +14,9 @@ else
   echo "$APP_DIR Folder Created"
 fi
 
+# Remember where this script was launched from
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 cd $APP_DIR
 INSTALL_PATH=$( pwd )
 
