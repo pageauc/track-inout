@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 progname = "inout.py"
-ver = "version 0.5"
+ver = "version 0.6"
 
 """
 track-inout  written by Claude Pageau pageauc@gmail.com
@@ -33,7 +33,7 @@ cd ~/track-inout
 ./inout.py
 
 """
-print("%s %s Track Enter and Leave Data using python and OpenCV" % (progname, ver))
+print("%s %s Track Enter and Leave Activity using python and OpenCV" % (progname, ver))
 print("Loading Please Wait ....")
 
 import os
@@ -303,7 +303,7 @@ def track():
         print("Press q in window Quits")
     else:
         print("Press ctrl-c to Quit")
-    print("Start Motion Tracking ....")
+    print("Start Tracking Enter Leave Activity ....")
 
     if not verbose:
         print("Note: Console Messages Suppressed per verbose=%s" % verbose)

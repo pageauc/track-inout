@@ -12,11 +12,11 @@ show_moves = False      # show detailed x,y tracking movement data
 save_CSV = True         # save CSV data file
 save_images = True      # save image when leave or enter activated
 image_path = "media/images"   # Folder for storing images (rel or abs)
-movelist_timeout = 0.5  # seconds with no motion then clear movelist
+movelist_timeout = 0.5  # wait seconds with no motion then clear movelist
 
 # Camera Settings
 # ---------------
-WEBCAM = True       # default = False False=PiCamera True=USB WebCamera
+WEBCAM = False        # default = False False=PiCamera True=USB WebCamera
 
 # Web Camera Settings
 WEBCAM_SRC = 0        # default = 0   USB opencv connection number
