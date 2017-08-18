@@ -28,7 +28,7 @@ See Quick or Manual install instructions below for details
 ### Quick Install
 Easy Install of track-inout onto Debian or Raspberry Pi Computer.
 
-    curl -L https://raw.github.com/pageauc/track-inout/master/track-inout-install.sh | bash
+    curl -L https://raw.githubusercontent.com/pageauc/track-inout/master/track-inout-install.sh | bash
 
 From a computer logged into the RPI via ssh(Putty) session use mouse to highlight command above, right click, copy.
 Then select ssh(Putty) window, mouse right click, paste.  The command should
@@ -40,7 +40,7 @@ so it may take some time if these are not up-to-date
 ### Manual Install
 From logged in RPI SSH session or console terminal perform the following.
 
-    wget https://raw.github.com/pageauc/track-inout/master/track-inout-install.sh
+    wget https://raw.githubusercontent.com/pageauc/track-inout/master/track-inout-install.sh
     chmod +x track-inout-install.sh
     ./track-inout-install.sh
 

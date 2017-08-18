@@ -21,20 +21,20 @@ INSTALL_PATH=$( pwd )
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 echo "------------------------------------------------"
 echo "  track-inout-Install.sh script ver $ver"
-echo "  $STATUS track-inout for Camera movement tracking"
+echo "  $STATUS track-inout Track Enter Leave Activity"
 echo "------------------------------------------------"
 echo ""
 echo "1 - Downloading GitHub Repo files to $INSTALL_PATH"
-wget -O track-inout-install.sh -q --show-progress https://raw.github.com/pageauc/track-inout/master/track-inout-install.sh
+wget -O track-inout-install.sh -q --show-progress https://raw.githubusercontent.com/pageauc/track-inout/master/track-outin-install.sh
 if [ $? -ne 0 ] ;  then
-  wget -O track-inout-install.sh https://raw.github.com/pageauc/track-inout/master/track-inout-install.sh
-  wget -O track-inout.py https://raw.github.com/pageauc/track-inout/master/track-inout.py
-  wget -O config.py https://raw.github.com/pageauc/track-inout/master/config.py
-  wget -O Readme.md https://raw.github.com/pageauc/track-inout/master/Readme.md
+  wget -O track-inout-install.sh https://raw.githubusercontent.com/pageauc/track-inout/master/track-inout-install.sh
+  wget -O track-inout.py https://raw.githubusercontent.com/pageauc/track-inout/master/track-inout.py
+  wget -O config.py https://raw.githubusercontent.com/pageauc/track-inout/master/config.py
+  wget -O Readme.md https://raw.githubusercontent.com/pageauc/track-inout/master/Readme.md
 else
-  wget -O track-inout.py -q --show-progress https://raw.github.com/pageauc/track-inout/master/track-inout.py
-  wget -O config.py -q --show-progress https://raw.github.com/pageauc/track-inout/master/config.py
-  wget -O Readme.md -q --show-progress  https://raw.github.com/pageauc/track-inout/master/Readme.md
+  wget -O track-inout.py -q --show-progress https://raw.githubusercontent.com/pageauc/track-inout/master/track-inout.py
+  wget -O config.py -q --show-progress https://raw.githubusercontent.com/pageauc/track-inout/master/config.py
+  wget -O Readme.md -q --show-progress  https://raw.githubusercontent.com/pageauc/track-inout/master/Readme.md
 fi
 echo "Done Download"
 echo "------------------------------------------------"
