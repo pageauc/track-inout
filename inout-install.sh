@@ -44,7 +44,7 @@ echo "------------------------------------------------"
 echo ""
 echo "2 - Make required Files Executable"
 chmod +x track-inout.py
-chmod +x track-inout-install.sh
+chmod +x *sh
 echo "Done Permissions"
 echo "------------------------------------------------"
 # check if system was updated today
@@ -79,7 +79,7 @@ cd $DIR
 if [ "$DIR" != "$INSTALL_PATH" ]; then
   if [ -e 'track-inout-install.sh' ]; then
     echo "$STATUS Cleanup track-inout-install.sh"
-    rm track-inout-install.sh
+    rm inout-install.sh
   fi
 fi
 echo "-----------------------------------------------"
