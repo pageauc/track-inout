@@ -9,7 +9,7 @@ thought it would be a good idea to include something useful.  I decided to track
 entering a leaving Activity when they cross a vertical or horizontal centerline
 At first it was a simple counter but now it also allows for options to 
 take an image and update a csv file.  You can add more features if you are
-familiar with python programming.  See my speed camera project for a ideas
+familiar with python programming.  See my speed camera project for some ideas
 https://github.com/pageauc/speed-camera
 
 ### Prerequisites

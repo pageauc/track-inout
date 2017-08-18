@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 progname = "inout.py"
-ver = "version 0.6"
+ver = "version 0.7"
 
 """
 track-inout  written by Claude Pageau pageauc@gmail.com
@@ -22,8 +22,8 @@ This will run on a Windows, Unix OS using a Web Cam or a Raspberry Pi
 using a Web Cam or RPI camera module installed and configured
 
 To do a quick install On Raspbian or Debbian Copy and paste command below
-into a terminal sesssion to download and install motion_track demo.
-Program will be installed to ~/motion-track-demo folder
+into a terminal or SSH session to download and install track-inout.
+Program will be installed to ~/track-inout folder
 
 curl -L https://raw.githubusercontent.com/pageauc/track-inout/master/inout-install.sh | bash
 
@@ -377,13 +377,22 @@ def track():
 
                 if not movelist:
                     if enter > old_enter:
-                        prefix = "enter"
+                        if inout_reverse:   # reverse enter leave if required
+                            prefix = "leave"
+                        else:
+                            prefix = "enter"
                     elif leave > old_leave:
-                        prefix = "leave"
+                        if inout_reverse:
+                            prefix = enter
+                        else:
+                            prefix = "leave"
                     else:
                         prefix = "error"
-
-                    logging.info("enter=%i leave=%i Diff=%i" % ( enter, leave, abs(enter-leave)))
+                        
+                    if inout_reverse:
+                        logging.info("leave=%i enter=%i Diff=%i" % ( leave, enter, abs(enter-leave)))                    
+                    else:
+                        logging.info("enter=%i leave=%i Diff=%i" % ( enter, leave, abs(enter-leave)))
 
                     # Save image
                     if save_images:
@@ -426,7 +435,10 @@ def track():
                 cv2.line( image2,( x_center, 0 ),( x_center, y_max ),color_txt, 2 )
             else:
                 cv2.line( image2,( 0, y_center ),( x_max, y_center ),color_txt, 2 )
-            img_text = ("ENTER %i          LEAVE %i" % (enter, leave))
+            if inout_reverse:
+                img_text = ("LEAVE %i          ENTER %i" % (leave, enter))
+            else:
+                img_text = ("ENTER %i          LEAVE %i" % (enter, leave))
             cv2.putText( image2, img_text, (35,15), font, font_scale,(color_txt),1)
 
             if diff_window_on:

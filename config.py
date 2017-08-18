@@ -1,18 +1,19 @@
-# Config.py file for inout.py  Release 0.5
+# Config.py file for inout.py  Release 0.7
 
 # Display Settings
 # ----------------
-verbose = True        # Set to False for no data display
-save_log = False      # Send console log messages to a log file instead of screen
-window_on = False     # Set to True displays opencv windows (GUI desktop reqd)
-show_fps = False      # Show Frames per second
+verbose = True          # Set to False to suppress console logging messages
+save_log = False        # Send console log messages to a log file instead of screen
+window_on = False       # Set to True displays opencv windows (GUI desktop reqd)
+show_fps = False        # Show Frames per second
 
 centerline_vert = True  # True=Vert False=horiz centerline trigger orientation
 show_moves = False      # show detailed x,y tracking movement data
 save_CSV = True         # save CSV data file
 save_images = True      # save image when leave or enter activated
-image_path = "media/images"   # Folder for storing images (rel or abs)
+image_path = "media/images"  # Folder for storing images (rel or abs)
 movelist_timeout = 0.5  # wait seconds with no motion then clear movelist
+inout_reverse = False   # reverse Enter and Leave orientation
 
 # Camera Settings
 # ---------------

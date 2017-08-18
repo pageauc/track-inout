@@ -1,6 +1,6 @@
 #!/bin/bash
 # Convenient track-inout motion-track-install.sh script written by Claude Pageau 1-Jul-2016
-ver="2.0"
+ver="0.7"
 APP_DIR='track-inout'  # Default folder install location
 
 cd ~
@@ -28,16 +28,22 @@ echo "  $STATUS track-inout Track Enter Leave Activity"
 echo "------------------------------------------------"
 echo ""
 echo "1 - Downloading GitHub Repo files to $INSTALL_PATH"
+wget -O media/webserver.txt -q --show-progress https://raw.githubusercontent.com/pageauc/track-inout/master/webserver.txt
 wget -O inout-install.sh -q --show-progress https://raw.githubusercontent.com/pageauc/track-inout/master/inout-install.sh
 if [ $? -ne 0 ] ;  then
   wget -O inout-install.sh https://raw.githubusercontent.com/pageauc/track-inout/master/inout-install.sh
   wget -O inout.py https://raw.githubusercontent.com/pageauc/track-inout/master/inout.py
   wget -O config.py https://raw.githubusercontent.com/pageauc/track-inout/master/config.py
   wget -O Readme.md https://raw.githubusercontent.com/pageauc/track-inout/master/Readme.md
+  wget -O webserver.py https://raw.githubusercontent.com/pageauc/track-inout/master/webserver.py
+  wget -O webserver.sh https://raw.githubusercontent.com/pageauc/track-inout/master/webserver.sh
+  wget -O media/webserver.txt https://raw.githubusercontent.com/pageauc/track-inout/master/webserver.txt  
 else
   wget -O inout.py -q --show-progress https://raw.githubusercontent.com/pageauc/track-inout/master/inout.py
   wget -O config.py -q --show-progress https://raw.githubusercontent.com/pageauc/track-inout/master/config.py
   wget -O Readme.md -q --show-progress https://raw.githubusercontent.com/pageauc/track-inout/master/Readme.md
+  wget -O webserver.py -q --show-progress https://raw.githubusercontent.com/pageauc/track-inout/master/webserver.py
+  wget -O webserver.sh -q --show-progress https://raw.githubusercontent.com/pageauc/track-inout/master/webserver.sh
 fi
 echo "Done Download"
 echo "------------------------------------------------"
