@@ -43,7 +43,8 @@ echo "Done Download"
 echo "------------------------------------------------"
 echo ""
 echo "2 - Make required Files Executable"
-chmod +x track-inout.py
+chmod +x *py
+chmod -x config*
 chmod +x *sh
 echo "Done Permissions"
 echo "------------------------------------------------"
