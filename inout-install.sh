@@ -37,7 +37,7 @@ if [ $? -ne 0 ] ;  then
 else
   wget -O track-inout.py -q --show-progress https://raw.githubusercontent.com/pageauc/track-inout/master/track-inout.py
   wget -O config.py -q --show-progress https://raw.githubusercontent.com/pageauc/track-inout/master/config.py
-  wget -O Readme.md -q --show-progress  https://raw.githubusercontent.com/pageauc/track-inout/master/Readme.md
+  wget -O Readme.md -q --show-progress https://raw.githubusercontent.com/pageauc/track-inout/master/Readme.md
 fi
 echo "Done Download"
 echo "------------------------------------------------"
@@ -87,9 +87,10 @@ echo "6 - $STATUS Complete"
 echo "-----------------------------------------------"
 echo ""
 echo "1. Reboot RPI if there are significant Raspbian system updates"
-echo "2. Raspberry pi needs a monitor/TV attached to display game window"
-echo "3. Run track-inout.py with the Raspbian Desktop GUI running"
-echo "4. To start open file manager or a Terminal session then change to"
+echo "2. if config.py window_on=True then a monitor/TV display is needed
+echo "   for the opencv window"
+echo "   Run track-inout.py with the Raspbian Desktop GUI running"
+echo "3. To start open file manager or a Terminal session then change to"
 echo "   track-inout folder and launch per commands below"
 echo ""
 echo "   cd ~/track-inout"
