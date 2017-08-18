@@ -40,7 +40,7 @@ so it may take some time if these are not up-to-date
 ### Manual Install
 From logged in RPI SSH session or console terminal perform the following.
 
-    wget https://raw.githubusercontent.com/pageauc/track-inout/master/track-inout-install.sh
+    wget https://raw.githubusercontent.com/pageauc/track-inout/master/track-outin-install.sh
     chmod +x track-inout-install.sh
     ./track-inout-install.sh
 

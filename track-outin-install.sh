@@ -68,7 +68,8 @@ fi
 echo "------------------------------------------------"
 echo ""
 echo "5 - Installing track-inout Dependencies"
-sudo apt-get install -y python-opencv python-picamera
+sudo apt-get install -y python-opencv python-picamera dos2unix
+dos2unix *
 echo "Done Dependencies"
 cd $DIR
 # Check if track-inout-install.sh was launched from track-inout folder
