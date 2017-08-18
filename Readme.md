@@ -1,23 +1,25 @@
-# Windows, Unix, Raspberry Pi track enter and leave object tracking
-### Uses python2/3, Opencv2/3 to do Real Time x,y tracking of largest moving object in camera view.
+# Track Enter and Leave Activity As they cross a vert or horiz centerline
+### Uses Python2/3, OpenCV2/3 and Web Cam or RPI Camera
+### Runs on Windows or Unix using Web Cam or Raspberry Pi using Web Cam or pi camera module
 
 ### Introduction
 This project came about when I decided to update my motion tracking demo and 
-thought it was a good idea to include something useful.  I decided to track
-things entering a leaving when the cross a centerline (vertical or horizontal)
-At first it was a simple counter but now in also allows for options to 
-take image and update a csv file.  You can add more features if you are
-familiar with python programming.
+thought it would be a good idea to include something useful.  I decided to track
+entering a leaving Activity when they cross a vertical or horizontal centerline
+At first it was a simple counter but now it also allows for options to 
+take an image and update a csv file.  You can add more features if you are
+familiar with python programming.  See my speed camera project for a ideas
+https://github.com/pageauc/speed-camera
 
 ### Prerequisites
 Requires Windows, Unix computer with a Web Camera or a Raspberry Pi computer with
 a Web Camera or RPI Camera Module and an up-to-date Raspbian distro.
 If you wish to use a web camera that is plugged into a usb port. Set WEBCAM = True in config.py
 otherwise, WEBCAM = False will use a connected raspberry pi camera module video stream.
-If running under Windows or a Not RPI unix distro then Web camera will automatically be
+If running under Windows or a Non RPI unix distro then Web camera will automatically be
 selected WEBCAM = True
 
-The dependencies and code files can be installed per the motion-track-install.sh script
+The dependencies and code files can be installed per the track-inout-install.sh script
 if you are using Debbian or Raspbian, Otherwise select the Github download zip or clone
 option from the github repo here https://github.com/pageauc/track-inout
 See Quick or Manual install instructions below for details
