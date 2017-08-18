@@ -28,9 +28,9 @@ echo "  $STATUS track-inout Track Enter Leave Activity"
 echo "------------------------------------------------"
 echo ""
 echo "1 - Downloading GitHub Repo files to $INSTALL_PATH"
-wget -O track-inout-install.sh -q --show-progress https://raw.githubusercontent.com/pageauc/track-inout/master/track-outin-install.sh
+wget -O inout-install.sh -q --show-progress https://raw.githubusercontent.com/pageauc/track-inout/master/inout-install.sh
 if [ $? -ne 0 ] ;  then
-  wget -O track-inout-install.sh https://raw.githubusercontent.com/pageauc/track-inout/master/track-inout-install.sh
+  wget -O inout-install.sh https://raw.githubusercontent.com/pageauc/track-inout/master/inout-install.sh
   wget -O track-inout.py https://raw.githubusercontent.com/pageauc/track-inout/master/track-inout.py
   wget -O config.py https://raw.githubusercontent.com/pageauc/track-inout/master/config.py
   wget -O Readme.md https://raw.githubusercontent.com/pageauc/track-inout/master/Readme.md
