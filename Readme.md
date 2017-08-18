@@ -1,6 +1,7 @@
-# Track Enter and Leave Activity As they cross a vert or horiz centerline
-### Uses Python2/3, OpenCV2/3 and Web Cam or RPI Camera
+## Track Enter and Leave Activity that cross a vert or horiz center line
 ### Runs on Windows or Unix using Web Cam or Raspberry Pi using Web Cam or pi camera module
+### Uses Python2/3, OpenCV2/3 to track motion
+
 
 ### Introduction
 This project came about when I decided to update my motion tracking demo and 
