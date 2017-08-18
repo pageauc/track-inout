@@ -20,10 +20,10 @@ otherwise, WEBCAM = False will use a connected raspberry pi camera module video 
 If running under Windows or a Non RPI unix distro then Web camera will automatically be
 selected WEBCAM = True
 
-The dependencies and code files can be installed per the track-inout-install.sh script
-if you are using Debbian or Raspbian, Otherwise select the Github download zip or clone
-option from the github repo here https://github.com/pageauc/track-inout
-See Quick or Manual install instructions below for details
+The dependencies and code files can be installed per the inout-install.sh script
+if you are using Debian or Raspbian, Otherwise select the Github download zip or clone
+green button on top right of  github repo web page here https://github.com/pageauc/track-inout
+See Quick or Manual install instructions below for further details
 
 ### Quick Install
 Easy Install of track-inout onto Debian or Raspberry Pi Computer.
@@ -32,8 +32,8 @@ Easy Install of track-inout onto Debian or Raspberry Pi Computer.
 
 From a computer logged into the RPI via ssh(Putty) session use mouse to highlight command above, right click, copy.
 Then select ssh(Putty) window, mouse right click, paste.  The command should
-download and execute the github setup.sh script and install the track-inout files.
-This install can also be done directly on an Internet connected computer via a console or desktop terminal session and web browser.
+download and execute the github inout-install.sh script and install the files into the track-inout folder.
+This install can also be done directly on from a console or desktop terminal session and web browser.
 Note - a raspbian/debian apt-get update and upgrade will be performed as part of install
 so it may take some time if these are not up-to-date
 
@@ -55,13 +55,12 @@ From SSH session, console or GUI desktop terminal session execute the following 
     ./inout.py
 
 On Windows make sure you have the latest python installed from https://www.python.org/downloads/
-To install clone or download zip from project github web page https://github.com/pageauc/track-inout
-use 7zip to unzip file if required.   
-Run inout.py from IDLE or if file association exists it can also be
+To install track-inout, clone or download zip from project github web page https://github.com/pageauc/track-inout
+use 7zip to unzip file if required.  A track-inout folder will be created for the files (extract here).   
+Run inout.py from IDLE or if python file association exists it can also be
 run from cmd prompt by double clicking on inout.py.  Use a text editor
-To modify settings use a text editor to edit the config.py file 
+to modify settings in the config.py file per settings comments.
 To view opencv window(s) on GUI desktop, edit config.py variable window_on=True.
-
 
 ### Trouble Shooting
 
