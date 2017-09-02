@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 progname = "inout.py"
-ver = "version 0.8"
+ver = "version 0.91"
 
 """
 track-inout  written by Claude Pageau pageauc@gmail.com
@@ -79,7 +79,6 @@ try:  # Bypass loading picamera library if not available eg. UNIX or WINDOWS
     from picamera import PiCamera
 except:
     WEBCAM = True
-    pass
 
 if WEBCAM:   # Get centerline for movement counting
     x_center = WEBCAM_WIDTH/2
@@ -324,7 +323,7 @@ def track():
         motion_found = False
         biggest_area = MIN_AREA
         image2 = vs.read()  # initialize image2
-        
+
         if WEBCAM:
             if ( WEBCAM_HFLIP and WEBCAM_VFLIP ):
                 image2 = cv2.flip( image2, -1 )
@@ -332,18 +331,13 @@ def track():
                 image2 = cv2.flip( image2, 1 )
             elif WEBCAM_VFLIP:
                 image2 = cv2.flip( image2, 0 )
-
+                
         if window_on:
             if centerline_vert:
                 cv2.line( image2,( x_center, 0 ),( x_center, y_max ),color_txt, 2 )
             else:
                 cv2.line( image2,( 0, y_center ),( x_max, y_center ),color_txt, 2 )
-            if inout_reverse:
-                img_text = ("LEAVE %i          ENTER %i" % (leave, enter))
-            else:
-                img_text = ("ENTER %i          LEAVE %i" % (enter, leave))
-            cv2.putText( image2, img_text, (35,15), font, font_scale,(color_txt),1)q        
-                
+
         grayimage2 = cv2.cvtColor(image2, cv2.COLOR_BGR2GRAY)
         # Get differences between the two greyed images
         differenceimage = cv2.absdiff(grayimage1, grayimage2)
@@ -398,9 +392,9 @@ def track():
                             prefix = "leave"
                     else:
                         prefix = "error"
-                        
+
                     if inout_reverse:
-                        logging.info("leave=%i enter=%i Diff=%i" % ( leave, enter, abs(enter-leave)))                    
+                        logging.info("leave=%i enter=%i Diff=%i" % ( leave, enter, abs(enter-leave)))
                     else:
                         logging.info("enter=%i leave=%i Diff=%i" % ( enter, leave, abs(enter-leave)))
 
@@ -441,6 +435,12 @@ def track():
             start_time, frame_count = show_FPS(start_time, frame_count)
 
         if window_on:
+
+            if inout_reverse:
+                img_text = ("LEAVE %i          ENTER %i" % (leave, enter))
+            else:
+                img_text = ("ENTER %i          LEAVE %i" % (enter, leave))
+            cv2.putText( image2, img_text, (35,15), font, font_scale,(color_txt),1)
 
             if diff_window_on:
                 cv2.imshow('Difference Image',differenceimage)
