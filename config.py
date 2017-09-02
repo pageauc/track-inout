@@ -4,7 +4,7 @@
 # ----------------
 verbose = True          # Set to False to suppress console logging messages
 save_log = False        # Send console log messages to a log file instead of screen
-window_on = False       # Set to True displays opencv windows (GUI desktop reqd)
+window_on = True        # Set to True displays opencv windows (GUI desktop reqd)
 show_fps = False        # Show Frames per second
 
 centerline_vert = True  # True=Vert False=horiz centerline trigger orientation

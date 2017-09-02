@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 progname = "inout.py"
-ver = "version 0.7"
+ver = "version 0.8"
 
 """
 track-inout  written by Claude Pageau pageauc@gmail.com
@@ -324,7 +324,7 @@ def track():
         motion_found = False
         biggest_area = MIN_AREA
         image2 = vs.read()  # initialize image2
-
+        
         if WEBCAM:
             if ( WEBCAM_HFLIP and WEBCAM_VFLIP ):
                 image2 = cv2.flip( image2, -1 )
@@ -333,6 +333,17 @@ def track():
             elif WEBCAM_VFLIP:
                 image2 = cv2.flip( image2, 0 )
 
+        if window_on:
+            if centerline_vert:
+                cv2.line( image2,( x_center, 0 ),( x_center, y_max ),color_txt, 2 )
+            else:
+                cv2.line( image2,( 0, y_center ),( x_max, y_center ),color_txt, 2 )
+            if inout_reverse:
+                img_text = ("LEAVE %i          ENTER %i" % (leave, enter))
+            else:
+                img_text = ("ENTER %i          LEAVE %i" % (enter, leave))
+            cv2.putText( image2, img_text, (35,15), font, font_scale,(color_txt),1)q        
+                
         grayimage2 = cv2.cvtColor(image2, cv2.COLOR_BGR2GRAY)
         # Get differences between the two greyed images
         differenceimage = cv2.absdiff(grayimage1, grayimage2)
@@ -347,7 +358,6 @@ def track():
 
         if contours:
             total_contours = len(contours)  # Get total number of contours
-            #cx, cy, cw, ch = 0, 0, 0, 0
             for c in contours:              # find contour with biggest area
                 found_area = cv2.contourArea(c)  # get area of next contour
                 # find the middle of largest bounding rectangle
@@ -420,7 +430,7 @@ def track():
 
                 if window_on:
                     # show small circle at motion location
-                    if SHOW_CIRCLE:
+                    if SHOW_CIRCLE and motion_found:
                         cv2.circle(image2,(cx,cy),CIRCLE_SIZE,(color_mo), LINE_THICKNESS)
                     else:
                         cv2.rectangle(image2,(cx,cy),(x+cw,y+ch),(color_mo), LINE_THICKNESS)
@@ -431,15 +441,6 @@ def track():
             start_time, frame_count = show_FPS(start_time, frame_count)
 
         if window_on:
-            if centerline_vert:
-                cv2.line( image2,( x_center, 0 ),( x_center, y_max ),color_txt, 2 )
-            else:
-                cv2.line( image2,( 0, y_center ),( x_max, y_center ),color_txt, 2 )
-            if inout_reverse:
-                img_text = ("LEAVE %i          ENTER %i" % (leave, enter))
-            else:
-                img_text = ("ENTER %i          LEAVE %i" % (enter, leave))
-            cv2.putText( image2, img_text, (35,15), font, font_scale,(color_txt),1)
 
             if diff_window_on:
                 cv2.imshow('Difference Image',differenceimage)
