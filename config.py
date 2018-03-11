@@ -1,19 +1,19 @@
-# Config.py file for inout.py  Release 0.7
+# Config.py file for inout.py  Release 0.93
 
 # Display Settings
 # ----------------
-verbose = True          # Set to False to suppress console logging messages
-save_log = False        # Send console log messages to a log file instead of screen
-window_on = True        # Set to True displays opencv windows (GUI desktop reqd)
-show_fps = False        # Show Frames per second
-
-centerline_vert = True  # True=Vert False=horiz centerline trigger orientation
-show_moves = False      # show detailed x,y tracking movement data
-save_CSV = True         # save CSV data file
-save_images = True      # save image when leave or enter activated
-image_path = "media/images"  # Folder for storing images (rel or abs)
-movelist_timeout = 0.5  # wait seconds with no motion then clear movelist
-inout_reverse = False   # reverse Enter and Leave orientation
+DEVICE_CONTROL_ON = False  # True=On False=Off enable/disable device_control function code
+VERBOSE = True          # Set to False to suppress console logging messages
+SAVE_LOG = False        # Send console log messages to a log file instead of screen
+SAVE_CSV_FILE = False   # save CSV data file
+SAVE_IMAGES = True      # save image when leave or enter activated
+WINDOW_ON = False       # Set to True displays opencv windows (GUI desktop reqd)
+SHOW_MOVES = False      # show detailed x,y tracking movement data
+SHOW_FPS = False        # Show Frames per second
+CENTER_LINE_VERT = True # True=Vert False=horiz centerline trigger orientation
+INOUT_REVERSE = False   # reverse Enter and Leave orientation
+IMAGE_PATH = "media/images"  # Folder for storing images (rel or abs)
+MOVE_LIST_TIMEOUT = 0.5  # wait seconds with no motion then clear movelist
 
 # Camera Settings
 # ---------------
@@ -34,16 +34,15 @@ CAMERA_VFLIP = False  # True=flip camera image vertically
 CAMERA_ROTATION = 0   # Rotate camera image valid values 0, 90, 180, 270
 CAMERA_FRAMERATE = 25 # default = 25 lower for USB Web Cam. Try different settings
 
-
 # OpenCV Settings
 # ---------------
 MIN_AREA = 700            # excludes all contours less than or equal to this Area
-diff_window_on = False    # Show OpenCV image difference window
-thresh_window_on = False  # Show OpenCV image Threshold window
+DIFF_WINDOW_ON = False    # Show OpenCV image difference window
+THRESH_WINDOW_ON = False  # Show OpenCV image Threshold window
 SHOW_CIRCLE = True        # True= show circle False= show rectancle on biggest motion
 CIRCLE_SIZE = 5           # diameter of circle for SHOW_CIRCLE
 LINE_THICKNESS = 2        # thickness of bounding line in pixels
-font_scale = .5           # size opencv text
+FONT_SCALE = .5           # size opencv text
 WINDOW_BIGGER = 2   # Resize multiplier for Movement Status Window
                     # if gui_window_on=True then makes opencv window bigger
                     # Note if the window is larger than 1 then a reduced frame rate will occur

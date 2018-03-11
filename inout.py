@@ -1,7 +1,4 @@
 #!/usr/bin/env python
-progname = "inout.py"
-ver = "version 0.92"
-
 """
 track-inout  written by Claude Pageau pageauc@gmail.com
 Windows, Unix, Raspberry (Pi) - python opencv2 motion tracking
@@ -10,7 +7,7 @@ using web camera or raspberry pi camera module.
 This is a python opencv2 motion tracking demonstration program.
 It will detect motion in the field of view and use opencv to calculate the
 largest contour and return its x,y coordinate.  Object is tracked
-until it crosses a vert or horiz centerline, Enter and Leave data
+until it crosses a prog_vert or horiz centerline, Enter and Leave data
 is update and optionaly recorded including optional image.
 Some of this code is base on a YouTube tutorial by
 Kyle Hounslow using C here https://www.youtube.com/watch?v=X6rPdRZzgjg
@@ -33,57 +30,64 @@ cd ~/track-inout
 ./inout.py
 
 """
-print("%s %s Track Enter and Leave Activity using python and OpenCV"
-      % (progname, ver))
 print("Loading Please Wait ....")
 # import the necessary packages
 import logging
 import time
 import datetime
-import cv2
 from threading import Thread
 import os
+import cv2
+
+PROG_VER = "ver 0.93"
 
 # Find the full path of this python script
-mypath = os.path.abspath(__file__)
+PROG_PATH = os.path.abspath(__file__)
 # get the path location only (excluding script name)
-baseDir = mypath[0:mypath.rfind("/")+1]
-baseFileName = mypath[mypath.rfind("/")+1:mypath.rfind(".")]
-progName = os.path.basename(__file__)
+BASE_DIR = PROG_PATH[0:PROG_PATH.rfind("/")+1]
+PROG_FILENAME = PROG_PATH[PROG_PATH.rfind("/")+1:PROG_PATH.rfind(".")]
+PROG_NAME = os.path.basename(__file__)
+print("%s %s Track Enter and Leave Activity using python and OpenCV"
+      % (PROG_NAME, PROG_VER))
 
 # Check for variable file to import and error out if not found.
-configFilePath = baseDir + "config.py"
-if not os.path.exists(configFilePath):
+CONFIG_FILE_PATH = BASE_DIR + "config.py"
+if not os.path.exists(CONFIG_FILE_PATH):
     print("ERROR - Missing config.py file - Could not find Configuration file %s"
-          % (configFilePath))
+          % (CONFIG_FILE_PATH))
     import urllib2
-    config_url = "https://raw.github.com/pageauc/motion-track/master/config.py"
+    CONFIG_URL = "https://raw.github.com/pageauc/motion-track/master/config.py"
     print("Attempting to Download new config.py file")
-    print("from %s" % config_url)
+    print("from %s" % CONFIG_URL)
     try:
-        wgetfile = urllib2.urlopen(config_url)
+        WGET_FILE = urllib2.urlopen(CONFIG_URL)
     except:
         print("ERROR - Download of config.py Failed")
         print("   Try Rerunning the motion-track-install.sh Again.")
         print("   or")
         print("   Perform GitHub curl install per Readme.md")
         print("   and Try Again")
-        print("Exiting %s" % progName)
+        print("Exiting %s" % PROG_NAME)
         quit(1)
     f = open('config.py', 'wb')
-    f.write(wgetfile.read())
+    f.write(WGET_FILE.read())
     f.close()
 
 # Read Configuration variables from config.py file
-from config import *
-
-try:  # Bypass loading picamera library if not available eg. UNIX or WINDOWS
+try:
+    from config import *
+except ImportError:
+    print("ERROR - Problem importing %s" % CONFIG_FILE_PATH)
+    quit(1)
+# Bypass loading picamera library if not available eg. UNIX or WINDOWS
+try:
     from picamera.array import PiRGBArray
     from picamera import PiCamera
 except ImportError:
     WEBCAM = True
 
-if WEBCAM:   # Get centerline for movement counting
+# Get centerline for movement counting
+if WEBCAM:
     x_center = WEBCAM_WIDTH/2
     y_center = WEBCAM_HEIGHT/2
     x_max = WEBCAM_WIDTH
@@ -98,41 +102,56 @@ else:
     x_buf = CAMERA_WIDTH/10
     y_buf = CAMERA_HEIGHT/10
 
-logFilePath = baseDir + baseFileName + ".log"
-if verbose:
-    print("Logging to Console per Variable verbose=True")
+logFilePath = BASE_DIR + PROG_FILENAME + ".log"
+if VERBOSE:
+    print("Logging to Console per Variable VERBOSE=True")
     logging.basicConfig(level=logging.DEBUG,
                         format='%(asctime)s %(levelname)-8s %(funcName)-10s %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S')
-elif save_log:
+elif SAVE_LOG:
     logging.basicConfig(level=logging.DEBUG,
                         format='%(asctime)s %(levelname)-8s %(funcName)-10s %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S',
                         filename=logFilePath,
                         filemode='w')
 else:
-    print("Logging Disabled per Variable verbose=False")
+    print("Logging Disabled per Variable VERBOSE=False")
     logging.basicConfig(level=logging.CRITICAL,
                         format='%(asctime)s %(levelname)-8s %(funcName)-10s %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S')
 
-if not os.path.isdir(image_path):
-    logging.info("Creating Image Storage Folder %s", image_path)
-    os.makedirs(image_path)
+if not os.path.isdir(IMAGE_PATH):
+    logging.info("Creating Image Storage Folder %s", IMAGE_PATH)
+    os.makedirs(IMAGE_PATH)
 
 # Color data for OpenCV lines and text
-cvWhite = (255, 255, 255)
-cvBlack = (0, 0, 0)
-cvBlue = (255, 0, 0)
-cvGreen = (0, 255, 0)
-cvRed = (0, 0, 255)
+CV_WHITE = (255, 255, 255)
+CV_BLACK = (0, 0, 0)
+CV_BLUE = (255, 0, 0)
+CV_GREEN = (0, 255, 0)
+CV_RED = (0, 0, 255)
 
-color_mo = cvRed  # color of motion circle or rectangle
-color_txt = cvBlue   # color of openCV text and centerline
+COLOR_MO = CV_RED  # color of motion circle or rectangle
+COLOR_TEXT = CV_BLUE   # color of openCV text and centerline
 
-font = cv2.FONT_HERSHEY_SIMPLEX
+TEXT_FONT = cv2.FONT_HERSHEY_SIMPLEX
 FRAME_COUNTER = 1000  # used when show_fps=True  Sets frequency of display
-quote = '"'  # Used for creating quote delimited log file of speed data
+QUOTE = '"'  # Used for creating quote delimited log file of speed data
+
+#------------------------------------------------------------------------------
+def control_device(in_count, out_count):
+    """ Control a device based on in-out counter"""
+    in_trigger = 3
+    out_trigger = 3
+    if in_count > in_trigger:   # You can set 3 to a variable controlled from config.py
+        logging.info("Control Servo Down in_trigger exceeded %i", in_trigger)
+        # Add servo down logic here
+        # in_count = 0
+    if out_count > out_trigger:
+        logging.info("Control Servo down out_trigger exceeded %i", out_trigger)
+        # Add servo up logic here
+        # out_count = 0
+    return in_count, out_count
 
 #------------------------------------------------------------------------------
 class PiVideoStream:
@@ -252,7 +271,7 @@ def get_image_name(path, prefix):
 
 #------------------------------------------------------------------------------
 def log_to_csv_file(data_to_append):
-    log_file_path = baseDir + baseFileName + ".csv"
+    log_file_path = BASE_DIR + PROG_FILENAME + ".csv"
     if not os.path.exists(log_file_path):
         open(log_file_path, 'w').close()
         f = open(log_file_path, 'ab')
@@ -267,7 +286,6 @@ def log_to_csv_file(data_to_append):
 #------------------------------------------------------------------------------
 def crossed_x_centerline(enter, leave, movelist):
     xbuf = 20  # buffer space on either side of x_center to avoid extra counts
-    # Check if over center line then count
     if len(movelist) > 1:  # Are there two entries
         if (movelist[0] <= x_center and movelist[-1] > x_center + x_buf):
             leave += 1
@@ -279,7 +297,6 @@ def crossed_x_centerline(enter, leave, movelist):
 
 #------------------------------------------------------------------------------
 def crossed_y_centerline(enter, leave, movelist):
-    # Check if over center line then count
     if len(movelist) > 1:  # Are there two entries
         if (movelist[0] <= y_center and movelist[-1] > y_center + y_buf):
             leave += 1
@@ -300,13 +317,13 @@ def track():
         print("Restarting Camera.  One Moment Please .....")
         time.sleep(4)
         return
-    if window_on:
+    if WINDOW_ON:
         print("Press q in window Quits")
     else:
         print("Press ctrl-c to Quit")
     print("Start Tracking Enter Leave Activity ....")
-    if not verbose:
-        print("Note: Console Messages Suppressed per verbose=%s" % verbose)
+    if not VERBOSE:
+        print("Note: Console Messages Suppressed per VERBOSE=%s" % VERBOSE)
     big_w = int(CAMERA_WIDTH * WINDOW_BIGGER)
     big_h = int(CAMERA_HEIGHT * WINDOW_BIGGER)
     cx, cy, cw, ch = 0, 0, 0, 0   # initialize contour center variables
@@ -329,18 +346,18 @@ def track():
                 image2 = cv2.flip(image2, 1)
             elif WEBCAM_VFLIP:
                 image2 = cv2.flip(image2, 0)
-        if window_on:
-            if centerline_vert:
-                cv2.line(image2, (x_center, 0), (x_center, y_max), color_txt, 2)
+        if WINDOW_ON:
+            if CENTER_LINE_VERT:
+                cv2.line(image2, (x_center, 0), (x_center, y_max), COLOR_TEXT, 2)
             else:
-                cv2.line(image2, (0, y_center), (x_max, y_center), color_txt, 2)
+                cv2.line(image2, (0, y_center), (x_max, y_center), COLOR_TEXT, 2)
         grayimage2 = cv2.cvtColor(image2, cv2.COLOR_BGR2GRAY)
         # Get differences between the two greyed images
-        differenceimage = cv2.absdiff(grayimage1, grayimage2)
+        difference_image = cv2.absdiff(grayimage1, grayimage2)
         grayimage1 = grayimage2  # save grayimage2 to grayimage1 ready for next image2
-        differenceimage = cv2.blur(differenceimage, (BLUR_SIZE, BLUR_SIZE))
+        difference_image = cv2.blur(difference_image, (BLUR_SIZE, BLUR_SIZE))
         # Get threshold of difference image based on THRESHOLD_SENSITIVITY variable
-        retval, thresholdimage = cv2.threshold(differenceimage,
+        retval, thresholdimage = cv2.threshold(difference_image,
                                                THRESHOLD_SENSITIVITY, 255,
                                                cv2.THRESH_BINARY)
         try:
@@ -365,14 +382,14 @@ def track():
                     cw, ch = w, h
             if motion_found:
                 move_timer = time.time() - move_time
-                if move_timer >= movelist_timeout:
+                if move_timer >= MOVE_LIST_TIMEOUT:
                     movelist = []
-                    #logging.info("Exceeded %.2f Seconds - Clear movelist" % movelist_timeout)
+                    #logging.info("Exceeded %.2f Seconds - Clear movelist" % MOVE_LIST_TIMEOUT)
                 move_time = time.time()
 
                 old_enter = enter
                 old_leave = leave
-                if centerline_vert:
+                if CENTER_LINE_VERT:
                     movelist.append(cx)
                     enter, leave, movelist = crossed_x_centerline(enter, leave, movelist)
                 else:
@@ -380,81 +397,87 @@ def track():
                     enter, leave, movelist = crossed_y_centerline(enter, leave, movelist)
                 if not movelist:
                     if enter > old_enter:
-                        if inout_reverse:   # reverse enter leave if required
+                        if INOUT_REVERSE:   # reverse enter leave if required
                             prefix = "leave"
                         else:
                             prefix = "enter"
                     elif leave > old_leave:
-                        if inout_reverse:
+                        if INOUT_REVERSE:
                             prefix = enter
                         else:
                             prefix = "leave"
                     else:
                         prefix = "error"
 
-                    if inout_reverse:
+                    # Control device or devices base on counters
+                    # for in and out. You can reset counter from
+                    # the control_device function and reset the
+                    # counters based on your control_device logic
+                    if DEVICE_CONTROL_ON:
+                        leave, enter = control_device(leave, enter)
+
+                    if INOUT_REVERSE:
                         logging.info("leave=%i enter=%i Diff=%i",
                                      leave, enter, abs(enter-leave))
                     else:
                         logging.info("enter=%i leave=%i Diff=%i",
                                      enter, leave, abs(enter-leave))
                     # Save image
-                    if save_images:
-                        filename = get_image_name(image_path, prefix)
+                    if SAVE_IMAGES:
+                        filename = get_image_name(IMAGE_PATH, prefix)
                         save_image = vs.read()
                         logging.info("Save: %s", filename)
                         cv2.imwrite(filename, save_image)
                     # Save data to csv file
-                    if save_CSV:
+                    if SAVE_CSV_FILE:
                         log_time = datetime.datetime.now()
                         log_csv_time = ("%s%04d%02d%02d%s,%s%02d%s,%s%02d%s,%s%02d%s" %
-                                        (quote, log_time.year, log_time.month,
-                                         log_time.day, quote,
-                                         quote, log_time.hour, quote,
-                                         quote, log_time.minute, quote,
-                                         quote, log_time.second, quote))
+                                        (QUOTE, log_time.year, log_time.month,
+                                         log_time.day, QUOTE,
+                                         QUOTE, log_time.hour, QUOTE,
+                                         QUOTE, log_time.minute, QUOTE,
+                                         QUOTE, log_time.second, QUOTE))
 
                         log_csv_text = ("%s,%s%s%s,%s%s%s,%i,%i,%i,%i,%i" %
                                         (log_csv_time,
-                                         quote, prefix, quote,
-                                         quote, filename, quote,
+                                         QUOTE, prefix, QUOTE,
+                                         QUOTE, filename, QUOTE,
                                          cx, cy, cw, ch, cw * ch))
                         log_to_csv_file(log_csv_text)
 
-                if window_on:
+                if WINDOW_ON:
                     # show small circle at motion location
                     if SHOW_CIRCLE and motion_found:
                         cv2.circle(image2, (cx, cy), CIRCLE_SIZE,
-                                   color_mo, LINE_THICKNESS)
+                                   COLOR_MO, LINE_THICKNESS)
                     else:
                         cv2.rectangle(image2, (cx, cy), (x+cw, y+ch),
-                                      color_mo, LINE_THICKNESS)
-                if show_moves:
+                                      COLOR_MO, LINE_THICKNESS)
+                if SHOW_MOVES:
                     logging.info("cx,cy(%i,%i) C:%2i A:%ix%i=%i SqPx" %
                                  (cx, cy, total_contour,
                                   cw, ch, biggest_area))
-        if show_fps:
+        if SHOW_FPS:
             start_time, frame_count = show_FPS(start_time, frame_count)
 
-        if window_on:
-
-            if inout_reverse:
+        if WINDOW_ON:
+            if INOUT_REVERSE:
                 img_text = ("LEAVE %i          ENTER %i" % (leave, enter))
             else:
                 img_text = ("ENTER %i          LEAVE %i" % (enter, leave))
             cv2.putText(image2, img_text, (35, 15),
-                        font, font_scale, (color_txt), 1)
+                        TEXT_FONT, FONT_SCALE, (COLOR_TEXT), 1)
 
-            if diff_window_on:
-                cv2.imshow('Difference Image', differenceimage)
-            if thresh_window_on:
+            if DIFF_WINDOW_ON:
+                cv2.imshow('Difference Image', difference_image)
+            if THRESH_WINDOW_ON:
                 cv2.imshow('OpenCV Threshold', thresholdimage)
             # Note setting a bigger window will slow the FPS
             if WINDOW_BIGGER > 1:
                 image3 = cv2.resize(image2, (big_w, big_h))
             cv2.imshow('Press q in Window Quits)', image3)
 
-            # Close Window if q pressed while mouse over opencv gui window
+            # Close Window if q pressed while mouse in opencv gui window
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 cv2.destroyAllWindows()
                 vs.stop()
@@ -486,6 +509,6 @@ if __name__ == '__main__':
             vs.stop()
             print("")
             print("User Pressed Keyboard ctrl-c")
-            print("%s %s - Exiting" % (progname, ver))
+            print("%s %s - Exiting" % (PROG_NAME, PROG_VER))
             print("")
             quit(0)
