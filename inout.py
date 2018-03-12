@@ -455,8 +455,7 @@ def track():
                     logging.info("cx,cy(%i,%i) C:%2i A:%ix%i=%i SqPx" %
                                  (cx, cy, total_contours,
                                   cw, ch, biggest_area))
-        if SHOW_FPS:
-            start_time, frame_count = show_loop_fps(start_time, frame_count)
+        start_time, frame_count = show_loop_fps(start_time, frame_count)
 
         if WINDOW_ON:
             if INOUT_REVERSE:
