@@ -30,8 +30,8 @@ cd ~/track-inout
 ./inout.py
 
 """
-print("Loading Please Wait ....")
-# import the necessary packages
+print("Loading ...")
+# import python libraries
 import logging
 import os
 import time
@@ -39,7 +39,7 @@ import datetime
 from threading import Thread
 import cv2
 
-PROG_VER = "ver 0.95"
+PROG_VER = "ver 0.96"
 # Find the full path of this python script
 PROG_PATH = os.path.abspath(__file__)
 # get the path location only (excluding script name)
@@ -130,17 +130,18 @@ CV_BLACK = (0, 0, 0)
 CV_BLUE = (255, 0, 0)
 CV_GREEN = (0, 255, 0)
 CV_RED = (0, 0, 255)
-
 COLOR_MO = CV_RED  # color of motion circle or rectangle
 COLOR_TEXT = CV_BLUE   # color of openCV text and centerline
-
 TEXT_FONT = cv2.FONT_HERSHEY_SIMPLEX
 FRAME_COUNTER = 1000  # used when SHOW_FPS=True  Sets frequency of display
 QUOTE = '"'  # Used for creating quote delimited log file of speed data
 
 #------------------------------------------------------------------------------
 def control_device(in_count, out_count):
-    """ Control a device based on in-out counter"""
+    """
+    Control a device based on in-out counter
+    and reset counter if required
+    """
     # You can set 3 to a variable controlled from config.py
     in_trigger = 3
     out_trigger = 3
@@ -156,10 +157,11 @@ def control_device(in_count, out_count):
 
 #------------------------------------------------------------------------------
 class PiVideoStream:
+    """  Get a single stream image from pi-camera module thread """
     def __init__(self, resolution=(CAMERA_WIDTH, CAMERA_HEIGHT),
                  framerate=CAMERA_FRAMERATE, rotation=0,
                  hflip=False, vflip=False):
-        # initialize the camera and stream
+        """ initialize the camera and stream """
         self.camera = PiCamera()
         self.camera.resolution = resolution
         self.camera.rotation = rotation
@@ -176,14 +178,14 @@ class PiVideoStream:
         self.stopped = False
 
     def start(self):
-        # start the thread to read frames from the video stream
+        """ start the thread to read frames from the video stream """
         t = Thread(target=self.update, args=())
         t.daemon = True
         t.start()
         return self
 
     def update(self):
-        # keep looping infinitely until the thread is stopped
+        """ keep looping infinitely until the thread is stopped """
         for f in self.stream:
             # grab the frame from the stream and clear the stream in
             # preparation for the next frame
@@ -199,19 +201,22 @@ class PiVideoStream:
                 return
 
     def read(self):
-        # return the frame most recently read
+        """ return the frame most recently read """
         return self.frame
 
     def stop(self):
-        # indicate that the thread should be stopped
+        """ indicate that the thread should be stopped """
         self.stopped = True
 
 #------------------------------------------------------------------------------
 class WebcamVideoStream:
+    """ Get a single stream image from web camera thread """
     def __init__(self, CAM_SRC=WEBCAM_SRC, CAM_WIDTH=WEBCAM_WIDTH,
                  CAM_HEIGHT=WEBCAM_HEIGHT):
-        # initialize the video camera stream and read the first frame
-        # from the stream
+        """
+        initialize the video camera stream and read the first frame
+        from the stream
+        """
         self.stream = CAM_SRC
         self.stream = cv2.VideoCapture(CAM_SRC)
         self.stream.set(3, CAM_WIDTH)
@@ -222,14 +227,14 @@ class WebcamVideoStream:
         self.stopped = False
 
     def start(self):
-        # start the thread to read frames from the video stream
+        """ start the thread to read frames from the video stream """
         t = Thread(target=self.update, args=())
         t.daemon = True
         t.start()
         return self
 
     def update(self):
-        # keep looping infinitely until the thread is stopped
+        """ keep looping infinitely until the thread is stopped """
         while True:
             # if the thread indicator variable is set, stop the thread
             if self.stopped:
@@ -238,15 +243,16 @@ class WebcamVideoStream:
             (self.grabbed, self.frame) = self.stream.read()
 
     def read(self):
-        # return the frame most recently read
+        """ return the frame most recently read """
         return self.frame
 
     def stop(self):
-        # indicate that the thread should be stopped
+        """ indicate that the thread should be stopped """
         self.stopped = True
 
 #------------------------------------------------------------------------------
 def show_loop_fps(start_time, frame_count):
+    """ Display image processing speed if required """
     if SHOW_FPS:
         if frame_count >= FRAME_COUNTER:
             duration = float(time.time() - start_time)
@@ -261,15 +267,17 @@ def show_loop_fps(start_time, frame_count):
 
 #------------------------------------------------------------------------------
 def get_image_name(path, prefix):
-    # build image file names by number sequence or date/time
+    """ build image file names by number sequence or date/time """
     right_now = datetime.datetime.now()
     file_name = ("%s/%s-%04d%02d%02d-%02d%02d%02d.jpg" %
-                 (path, prefix, right_now.year, right_now.month, right_now.day,
+                 (path, prefix,
+                  right_now.year, right_now.month, right_now.day,
                   right_now.hour, right_now.minute, right_now.second))
     return file_name
 
 #------------------------------------------------------------------------------
 def log_to_csv_file(data_to_append):
+    """ create log file if required and save data to csv file """
     log_file_path = BASE_DIR + PROG_FILENAME + ".csv"
     if not os.path.exists(log_file_path):
         open(log_file_path, 'w').close()
@@ -284,6 +292,7 @@ def log_to_csv_file(data_to_append):
 
 #------------------------------------------------------------------------------
 def crossed_x_centerline(enter, leave, movelist):
+    """ Did the movement cross the x center line"""
     if len(movelist) > 1:  # Are there two entries
         if (movelist[0] <= X_CENTER and movelist[-1] > X_CENTER + X_BUF):
             leave += 1
@@ -295,6 +304,7 @@ def crossed_x_centerline(enter, leave, movelist):
 
 #------------------------------------------------------------------------------
 def crossed_y_centerline(enter, leave, movelist):
+    """ Did the movement cross the y center line """
     if len(movelist) > 1:  # Are there two entries
         if (movelist[0] <= Y_CENTER and movelist[-1] > Y_CENTER + Y_BUF):
             leave += 1
@@ -306,6 +316,7 @@ def crossed_y_centerline(enter, leave, movelist):
 
 #------------------------------------------------------------------------------
 def track():
+    """ Track Movement and count enter, leave """
     image1 = vs.read()   # initialize image1 (done once)
     try:
         grayimage1 = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
@@ -352,9 +363,11 @@ def track():
         grayimage2 = cv2.cvtColor(image2, cv2.COLOR_BGR2GRAY)
         # Get differences between the two greyed images
         difference_image = cv2.absdiff(grayimage1, grayimage2)
-        grayimage1 = grayimage2  # save grayimage2 to grayimage1 ready for next image2
+        # save grayimage2 to grayimage1 ready for next image2
+        grayimage1 = grayimage2
         difference_image = cv2.blur(difference_image, (BLUR_SIZE, BLUR_SIZE))
-        # Get threshold of difference image based on THRESHOLD_SENSITIVITY variable
+        # Get threshold of difference image based on
+        # THRESHOLD_SENSITIVITY variable
         retval, thresholdimage = cv2.threshold(difference_image,
                                                THRESHOLD_SENSITIVITY, 255,
                                                cv2.THRESH_BINARY)
@@ -406,7 +419,6 @@ def track():
                             prefix = "leave"
                     else:
                         prefix = "error"
-
                     # Control device or devices base on counters
                     # for in and out. You can reset counter from
                     # the control_device function and reset the
@@ -435,14 +447,12 @@ def track():
                                          QUOTE, log_time.hour, QUOTE,
                                          QUOTE, log_time.minute, QUOTE,
                                          QUOTE, log_time.second, QUOTE))
-
                         log_csv_text = ("%s,%s%s%s,%s%s%s,%i,%i,%i,%i,%i" %
                                         (log_csv_time,
                                          QUOTE, prefix, QUOTE,
                                          QUOTE, filename, QUOTE,
                                          cx, cy, cw, ch, cw * ch))
                         log_to_csv_file(log_csv_text)
-
                 if WINDOW_ON:
                     # show small circle at motion location
                     if SHOW_CIRCLE and motion_found:
