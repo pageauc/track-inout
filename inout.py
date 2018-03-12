@@ -7,18 +7,18 @@ using web camera or raspberry pi camera module.
 This is a python opencv2 motion tracking demonstration program.
 It will detect motion in the field of view and use opencv to calculate the
 largest contour and return its x,y coordinate.  Object is tracked
-until it crosses a prog_vert or horiz centerline, Enter and Leave data
-is update and optionaly recorded including optional image.
+until it crosses a verticle or horizontal center line, Enter and Leave data
+is updated and optionally recorded and optionally saving video frame image.
 Some of this code is base on a YouTube tutorial by
 Kyle Hounslow using C here https://www.youtube.com/watch?v=X6rPdRZzgjg
 
-Here is a my YouTube video demonstrating this demo program using a
+Here is my YouTube video demonstrating this demo program using a
 Raspberry Pi B2 https://youtu.be/09JS7twPBsQ
 
 This will run on a Windows, Unix OS using a Web Cam or a Raspberry Pi
 using a Web Cam or RPI camera module installed and configured
 
-To do a quick install On Raspbian or Debbian Copy and paste command below
+To do a quick install On Raspbian or Debian Copy and paste command below
 into a terminal or SSH session to download and install track-inout.
 Program will be installed to ~/track-inout folder
 
