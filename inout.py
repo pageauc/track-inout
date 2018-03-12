@@ -26,8 +26,8 @@ curl -L https://raw.githubusercontent.com/pageauc/track-inout/master/inout-insta
 
 How to Run
 
-cd ~/track-inout
-./inout.py
+    cd ~/track-inout
+    ./inout.py
 
 """
 print("Loading ...")
@@ -39,7 +39,7 @@ import datetime
 from threading import Thread
 import cv2
 
-PROG_VER = "ver 0.97"
+PROG_VER = "ver 0.98"
 # Find the full path of this python script
 PROG_PATH = os.path.abspath(__file__)
 # get the path location only (excluding script name)
@@ -85,7 +85,6 @@ try:
     from picamera import PiCamera
 except ImportError:
     WEBCAM = True
-
 # Get center line for movement counting
 if WEBCAM:
     X_CENTER = WEBCAM_WIDTH/2
@@ -101,7 +100,6 @@ else:
     Y_MAX = CAMERA_WIDTH
     X_BUF = CAMERA_WIDTH/10
     Y_BUF = CAMERA_HEIGHT/10
-
 LOG_FILE_PATH = BASE_DIR + PROG_FILENAME + ".log"
 if VERBOSE:
     print("Logging to Console per Variable VERBOSE=True")
@@ -119,11 +117,9 @@ else:
     logging.basicConfig(level=logging.CRITICAL,
                         format='%(asctime)s %(levelname)-8s %(funcName)-10s %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S')
-
 if not os.path.isdir(IMAGE_PATH):
     logging.info("Creating Image Storage Folder %s", IMAGE_PATH)
     os.makedirs(IMAGE_PATH)
-
 # Color data for OpenCV lines and text
 CV_WHITE = (255, 255, 255)
 CV_BLACK = (0, 0, 0)
@@ -399,7 +395,6 @@ def track():
                     movelist = []
                     #logging.info("Exceeded %.2f Seconds - Clear movelist" % MOVE_LIST_TIMEOUT)
                 move_time = time.time()
-
                 old_enter = enter
                 old_leave = leave
                 if CENTER_LINE_VERT:
@@ -427,7 +422,6 @@ def track():
                     # counters based on your control_device logic
                     if DEVICE_CONTROL_ON:
                         leave, enter = control_device(leave, enter)
-
                     if INOUT_REVERSE:
                         logging.info("leave=%i enter=%i Diff=%i",
                                      leave, enter, abs(enter-leave))
@@ -476,7 +470,6 @@ def track():
                 img_text = ("ENTER %i          LEAVE %i" % (enter, leave))
             cv2.putText(image2, img_text, (35, 15),
                         TEXT_FONT, FONT_SCALE, (COLOR_TEXT), 1)
-
             if DIFF_WINDOW_ON:
                 cv2.imshow('Difference Image', difference_image)
             if THRESH_WINDOW_ON:
@@ -485,7 +478,6 @@ def track():
             if WINDOW_BIGGER > 1:
                 image3 = cv2.resize(image2, (big_w, big_h))
             cv2.imshow('Press q in Window Quits)', image3)
-
             # Close Window if q pressed while mouse in opencv gui window
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 cv2.destroyAllWindows()
