@@ -39,7 +39,7 @@ import datetime
 from threading import Thread
 import cv2
 
-PROG_VER = "ver 0.94"
+PROG_VER = "ver 0.95"
 # Find the full path of this python script
 PROG_PATH = os.path.abspath(__file__)
 # get the path location only (excluding script name)
@@ -362,7 +362,7 @@ def track():
             thresholdimage, contours, hierarchy = cv2.findContours(thresholdimage,
                                                                    cv2.RETR_EXTERNAL,
                                                                    cv2.CHAIN_APPROX_SIMPLE)
-        except:
+        except ValueError:
             contours, hierarchy = cv2.findContours(thresholdimage,
                                                    cv2.RETR_EXTERNAL,
                                                    cv2.CHAIN_APPROX_SIMPLE)
