@@ -39,7 +39,7 @@ import datetime
 from threading import Thread
 import cv2
 
-PROG_VER = "ver 0.96"
+PROG_VER = "ver 0.97"
 # Find the full path of this python script
 PROG_PATH = os.path.abspath(__file__)
 # get the path location only (excluding script name)
@@ -371,14 +371,16 @@ def track():
         retval, thresholdimage = cv2.threshold(difference_image,
                                                THRESHOLD_SENSITIVITY, 255,
                                                cv2.THRESH_BINARY)
+        # Try python2 opencv syntax and fail over to
+        # python3 opencv syntax if required
         try:
-            thresholdimage, contours, hierarchy = cv2.findContours(thresholdimage,
-                                                                   cv2.RETR_EXTERNAL,
-                                                                   cv2.CHAIN_APPROX_SIMPLE)
-        except ValueError:
             contours, hierarchy = cv2.findContours(thresholdimage,
                                                    cv2.RETR_EXTERNAL,
                                                    cv2.CHAIN_APPROX_SIMPLE)
+        except ValueError:
+            thresholdimage, contours, hierarchy = cv2.findContours(thresholdimage,
+                                                                   cv2.RETR_EXTERNAL,
+                                                                   cv2.CHAIN_APPROX_SIMPLE)
         if contours:
             total_contours = len(contours)  # Get total number of contours
             for c in contours:              # find contour with biggest area
