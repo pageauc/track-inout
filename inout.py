@@ -33,23 +33,22 @@ cd ~/track-inout
 print("Loading Please Wait ....")
 # import the necessary packages
 import logging
+import os
 import time
 import datetime
 from threading import Thread
-import os
 import cv2
 
-PROG_VER = "ver 0.93"
-
+PROG_VER = "ver 0.94"
 # Find the full path of this python script
 PROG_PATH = os.path.abspath(__file__)
 # get the path location only (excluding script name)
 BASE_DIR = PROG_PATH[0:PROG_PATH.rfind("/")+1]
 PROG_FILENAME = PROG_PATH[PROG_PATH.rfind("/")+1:PROG_PATH.rfind(".")]
 PROG_NAME = os.path.basename(__file__)
+
 print("%s %s Track Enter and Leave Activity using python and OpenCV"
       % (PROG_NAME, PROG_VER))
-
 # Check for variable file to import and error out if not found.
 CONFIG_FILE_PATH = BASE_DIR + "config.py"
 if not os.path.exists(CONFIG_FILE_PATH):
@@ -79,6 +78,7 @@ try:
 except ImportError:
     print("ERROR - Problem importing %s" % CONFIG_FILE_PATH)
     quit(1)
+
 # Bypass loading picamera library if not available eg. UNIX or WINDOWS
 try:
     from picamera.array import PiRGBArray
@@ -86,23 +86,23 @@ try:
 except ImportError:
     WEBCAM = True
 
-# Get centerline for movement counting
+# Get center line for movement counting
 if WEBCAM:
-    x_center = WEBCAM_WIDTH/2
-    y_center = WEBCAM_HEIGHT/2
-    x_max = WEBCAM_WIDTH
-    y_max = WEBCAM_HEIGHT
-    x_buf = WEBCAM_WIDTH/10
-    y_buf = WEBCAM_HEIGHT/10
+    X_CENTER = WEBCAM_WIDTH/2
+    Y_CENTER = WEBCAM_HEIGHT/2
+    X_MAX = WEBCAM_WIDTH
+    Y_MAX = WEBCAM_HEIGHT
+    X_BUF = WEBCAM_WIDTH/10
+    Y_BUF = WEBCAM_HEIGHT/10
 else:
-    x_center = CAMERA_WIDTH/2
-    y_center = CAMERA_HEIGHT/2
-    x_max = CAMERA_HEIGHT
-    y_max = CAMERA_WIDTH
-    x_buf = CAMERA_WIDTH/10
-    y_buf = CAMERA_HEIGHT/10
+    X_CENTER = CAMERA_WIDTH/2
+    Y_CENTER = CAMERA_HEIGHT/2
+    X_MAX = CAMERA_HEIGHT
+    Y_MAX = CAMERA_WIDTH
+    X_BUF = CAMERA_WIDTH/10
+    Y_BUF = CAMERA_HEIGHT/10
 
-logFilePath = BASE_DIR + PROG_FILENAME + ".log"
+LOG_FILE_PATH = BASE_DIR + PROG_FILENAME + ".log"
 if VERBOSE:
     print("Logging to Console per Variable VERBOSE=True")
     logging.basicConfig(level=logging.DEBUG,
@@ -112,7 +112,7 @@ elif SAVE_LOG:
     logging.basicConfig(level=logging.DEBUG,
                         format='%(asctime)s %(levelname)-8s %(funcName)-10s %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S',
-                        filename=logFilePath,
+                        filename=LOG_FILE_PATH,
                         filemode='w')
 else:
     print("Logging Disabled per Variable VERBOSE=False")
@@ -135,15 +135,16 @@ COLOR_MO = CV_RED  # color of motion circle or rectangle
 COLOR_TEXT = CV_BLUE   # color of openCV text and centerline
 
 TEXT_FONT = cv2.FONT_HERSHEY_SIMPLEX
-FRAME_COUNTER = 1000  # used when show_fps=True  Sets frequency of display
+FRAME_COUNTER = 1000  # used when SHOW_FPS=True  Sets frequency of display
 QUOTE = '"'  # Used for creating quote delimited log file of speed data
 
 #------------------------------------------------------------------------------
 def control_device(in_count, out_count):
     """ Control a device based on in-out counter"""
+    # You can set 3 to a variable controlled from config.py
     in_trigger = 3
     out_trigger = 3
-    if in_count > in_trigger:   # You can set 3 to a variable controlled from config.py
+    if in_count > in_trigger:
         logging.info("Control Servo Down in_trigger exceeded %i", in_trigger)
         # Add servo down logic here
         # in_count = 0
@@ -216,7 +217,6 @@ class WebcamVideoStream:
         self.stream.set(3, CAM_WIDTH)
         self.stream.set(4, CAM_HEIGHT)
         (self.grabbed, self.frame) = self.stream.read()
-
         # initialize the variable used to indicate if the thread should
         # be stopped
         self.stopped = False
@@ -234,7 +234,6 @@ class WebcamVideoStream:
             # if the thread indicator variable is set, stop the thread
             if self.stopped:
                 return
-
             # otherwise, read the next frame from the stream
             (self.grabbed, self.frame) = self.stream.read()
 
@@ -247,13 +246,13 @@ class WebcamVideoStream:
         self.stopped = True
 
 #------------------------------------------------------------------------------
-def show_FPS(start_time, frame_count):
-    if debug:
+def show_loop_fps(start_time, frame_count):
+    if VERBOSE:
         if frame_count >= FRAME_COUNTER:
             duration = float(time.time() - start_time)
-            FPS = float(frame_count / duration)
+            fps_value = float(frame_count / duration)
             logging.info("Processing at %.2f fps last %i frames",
-                         FPS, frame_count)
+                         fps_value, frame_count)
             frame_count = 0
             start_time = time.time()
         else:
@@ -263,11 +262,11 @@ def show_FPS(start_time, frame_count):
 #------------------------------------------------------------------------------
 def get_image_name(path, prefix):
     # build image file names by number sequence or date/time
-    rightNow = datetime.datetime.now()
-    filename = ("%s/%s-%04d%02d%02d-%02d%02d%02d.jpg" %
-                (path, prefix, rightNow.year, rightNow.month, rightNow.day,
-                 rightNow.hour, rightNow.minute, rightNow.second))
-    return filename
+    right_now = datetime.datetime.now()
+    file_name = ("%s/%s-%04d%02d%02d-%02d%02d%02d.jpg" %
+                 (path, prefix, right_now.year, right_now.month, right_now.day,
+                  right_now.hour, right_now.minute, right_now.second))
+    return file_name
 
 #------------------------------------------------------------------------------
 def log_to_csv_file(data_to_append):
@@ -285,12 +284,11 @@ def log_to_csv_file(data_to_append):
 
 #------------------------------------------------------------------------------
 def crossed_x_centerline(enter, leave, movelist):
-    xbuf = 20  # buffer space on either side of x_center to avoid extra counts
     if len(movelist) > 1:  # Are there two entries
-        if (movelist[0] <= x_center and movelist[-1] > x_center + x_buf):
+        if (movelist[0] <= X_CENTER and movelist[-1] > X_CENTER + X_BUF):
             leave += 1
             movelist = []
-        elif (movelist[0] > x_center and  movelist[-1] < x_center - x_buf):
+        elif (movelist[0] > X_CENTER and  movelist[-1] < X_CENTER - X_BUF):
             enter += 1
             movelist = []
     return enter, leave, movelist
@@ -298,10 +296,10 @@ def crossed_x_centerline(enter, leave, movelist):
 #------------------------------------------------------------------------------
 def crossed_y_centerline(enter, leave, movelist):
     if len(movelist) > 1:  # Are there two entries
-        if (movelist[0] <= y_center and movelist[-1] > y_center + y_buf):
+        if (movelist[0] <= Y_CENTER and movelist[-1] > Y_CENTER + Y_BUF):
             leave += 1
             movelist = []
-        elif (movelist[0] > y_center and  movelist[-1] < y_center - y_buf):
+        elif (movelist[0] > Y_CENTER and  movelist[-1] < Y_CENTER - Y_BUF):
             enter += 1
             movelist = []
     return enter, leave, movelist
@@ -327,8 +325,8 @@ def track():
     big_w = int(CAMERA_WIDTH * WINDOW_BIGGER)
     big_h = int(CAMERA_HEIGHT * WINDOW_BIGGER)
     cx, cy, cw, ch = 0, 0, 0, 0   # initialize contour center variables
-    frame_count = 0  #initialize for show_fps
-    start_time = time.time() #initialize for show_fps
+    frame_count = 0  #initialize for show_loop_fps
+    start_time = time.time() #initialize for show_loop_fps
     still_scanning = True
     movelist = []
     move_time = time.time()
@@ -348,9 +346,9 @@ def track():
                 image2 = cv2.flip(image2, 0)
         if WINDOW_ON:
             if CENTER_LINE_VERT:
-                cv2.line(image2, (x_center, 0), (x_center, y_max), COLOR_TEXT, 2)
+                cv2.line(image2, (X_CENTER, 0), (X_CENTER, Y_MAX), COLOR_TEXT, 2)
             else:
-                cv2.line(image2, (0, y_center), (x_max, y_center), COLOR_TEXT, 2)
+                cv2.line(image2, (0, Y_CENTER), (X_MAX, Y_CENTER), COLOR_TEXT, 2)
         grayimage2 = cv2.cvtColor(image2, cv2.COLOR_BGR2GRAY)
         # Get differences between the two greyed images
         difference_image = cv2.absdiff(grayimage1, grayimage2)
@@ -455,10 +453,10 @@ def track():
                                       COLOR_MO, LINE_THICKNESS)
                 if SHOW_MOVES:
                     logging.info("cx,cy(%i,%i) C:%2i A:%ix%i=%i SqPx" %
-                                 (cx, cy, total_contour,
+                                 (cx, cy, total_contours,
                                   cw, ch, biggest_area))
         if SHOW_FPS:
-            start_time, frame_count = show_FPS(start_time, frame_count)
+            start_time, frame_count = show_loop_fps(start_time, frame_count)
 
         if WINDOW_ON:
             if INOUT_REVERSE:

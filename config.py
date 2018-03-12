@@ -1,4 +1,4 @@
-# Config.py file for inout.py  Release 0.93
+# Config.py file for inout.py  Release 0.94
 
 # Display Settings
 # ----------------
