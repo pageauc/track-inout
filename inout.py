@@ -247,7 +247,7 @@ class WebcamVideoStream:
 
 #------------------------------------------------------------------------------
 def show_loop_fps(start_time, frame_count):
-    if VERBOSE:
+    if SHOW_FPS:
         if frame_count >= FRAME_COUNTER:
             duration = float(time.time() - start_time)
             fps_value = float(frame_count / duration)
