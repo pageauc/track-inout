@@ -90,8 +90,8 @@ if  DEVICE_CONTROL_ON:
         quit(1)
     # LED control variables
     LIGHT_TIMER = 60
-    LED_GREEN_PIN = 17
-    LED_RED_PIN = 18
+    LED_GREEN_PIN = 11
+    LED_RED_PIN = 13
     # SERVO control variables
     SERVO_PIN = 12  # Set gpio pin to control servo
     SERVO_FREQ = 50  # Set Frequency for servo control
