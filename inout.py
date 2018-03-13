@@ -199,13 +199,13 @@ def timer_on(change_time, duration):
 def led_green(green_on):
     """ Set green and red leds based on servo position """
     if green_on:
-        GPIO.output(LED_GREEN_PIN, GPIO.HIGH) # Green LED off
-        GPIO.output(LED_RED_PIN, GPIO.LOW)  # Red LED on
+        GPIO.output(LED_GREEN_PIN, GPIO.HIGH) # Green LED on
+        GPIO.output(LED_RED_PIN, GPIO.LOW)    # Red LED off
         logging.info("Light is GREEN")
     else:
         # code to turn green LED ON and red LED OFF
-        GPIO.output(LED_GREEN_PIN, GPIO.LOW) # Green LED on
-        GPIO.output(LED_RED_PIN, GPIO.HIGH)    # Red LED Off
+        GPIO.output(LED_GREEN_PIN, GPIO.LOW) # Green LED off
+        GPIO.output(LED_RED_PIN, GPIO.HIGH)  # Red LED on
         logging.info("Light is RED")
 
 #------------------------------------------------------------------------------
