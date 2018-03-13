@@ -39,7 +39,7 @@ import datetime
 from threading import Thread
 import cv2
 
-PROG_VER = "ver 0.98"
+PROG_VER = "ver 0.99"
 # Find the full path of this python script
 PROG_PATH = os.path.abspath(__file__)
 # get the path location only (excluding script name)
@@ -79,6 +79,25 @@ except ImportError:
     print("ERROR - Problem importing %s" % CONFIG_FILE_PATH)
     quit(1)
 
+# Setup GPIO for a Servo. Customize pin and Freq per variables     
+if  DEVICE_CONTROL_ON:
+    # IMPORTANT - You need to setup a servo on appropriate
+    # GPIO pin.  This is sample code only.
+    try:
+        import RPi.GPIO as GPIO
+    except ImportError:
+        print("ERROR - Problem importing RPi.GPIO library")
+        quit(1)
+    SERVO_PIN = 12  # Set gpio pin to control servo
+    SERVO_FREQ = 50  # Set Frequency for servo control
+    SERVO_0 = 2.5  # Set Duty Cycle for Servo at 0 degrees
+    SERVO_90 = 7.5  #  Set Duty Cycle for 90 Degrees
+    SERVO_180 = 12.5  # Set Duty Cycle for 180 Degrees  
+    GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(SERVO_PIN, GPIO.OUT)
+    p = GPIO.PWM(SERVO_PIN, SERVO_FREQ)
+    p.start(SERVO_90)    # Set servo in Neutral Position
+    
 # Bypass loading picamera library if not available eg. UNIX or WINDOWS
 try:
     from picamera.array import PiRGBArray
@@ -135,20 +154,17 @@ QUOTE = '"'  # Used for creating quote delimited log file of speed data
 #------------------------------------------------------------------------------
 def control_device(in_count, out_count):
     """
-    Control a device based on in-out counter
-    and reset counter if required
+    Sample Code to Control a servo based on in-out counter
+    You can also reset counter if required
     """
     # You can set 3 to a variable controlled from config.py
     in_trigger = 3
     out_trigger = 3
-    if in_count > in_trigger:
-        logging.info("Control Servo Down in_trigger exceeded %i", in_trigger)
-        # Add servo down logic here
-        # in_count = 0
-    if out_count > out_trigger:
-        logging.info("Control Servo down out_trigger exceeded %i", out_trigger)
-        # Add servo up logic here
-        # out_count = 0
+    if in_count > in_trigger or out_count > out_trigger:
+        logging.info("Control Servo Down since in > %i or out > %i Exceeded",
+                     in_trigger, out_trigger)
+        p.ChangeDutyCycle(SERVO_180) # Move Servo to 180 Degrees
+        time.sleep(1)
     return in_count, out_count
 
 #------------------------------------------------------------------------------
@@ -462,7 +478,6 @@ def track():
                                  (cx, cy, total_contours,
                                   cw, ch, biggest_area))
         start_time, frame_count = show_loop_fps(start_time, frame_count)
-
         if WINDOW_ON:
             if INOUT_REVERSE:
                 img_text = ("LEAVE %i          ENTER %i" % (leave, enter))
