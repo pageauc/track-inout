@@ -39,7 +39,7 @@ import datetime
 from threading import Thread
 import cv2
 
-PROG_VER = "ver 1.06"
+PROG_VER = "ver 1.07"
 # Find the full path of this python script
 PROG_PATH = os.path.abspath(__file__)
 # get the path location only (excluding script name)
@@ -561,8 +561,8 @@ def track():
 
 #------------------------------------------------------------------------------
 if __name__ == '__main__':
-    while True:
-        try:
+    try:
+        while True:
             # Save images to an in-program stream
             # Setup video stream on a processor Thread for faster speed
             if WEBCAM:   #  Start Web Cam stream (Note USB webcam must be plugged in)
@@ -580,10 +580,13 @@ if __name__ == '__main__':
                 vs.camera.vflip = CAMERA_VFLIP
                 time.sleep(2.0)  # Allow PiCamera to initialize
             track()
-        except KeyboardInterrupt:
-            vs.stop()
-            print("")
-            print("User Pressed Keyboard ctrl-c")
-            print("%s %s - Exiting" % (PROG_NAME, PROG_VER))
-            print("")
-            quit(0)
+    except KeyboardInterrupt:
+        pass
+    vs.stop()
+    if DEVICE_CONTROL_ON:
+        p.stop()
+        GPIO.cleanup()
+    print("")
+    print("User Pressed Keyboard ctrl-c")
+    print("%s %s - Exiting" % (PROG_NAME, PROG_VER))
+    quit(0)
