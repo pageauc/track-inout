@@ -39,7 +39,7 @@ import datetime
 from threading import Thread
 import cv2
 
-PROG_VER = "ver 1.02"
+PROG_VER = "ver 1.03"
 # Find the full path of this python script
 PROG_PATH = os.path.abspath(__file__)
 # get the path location only (excluding script name)
@@ -175,11 +175,13 @@ def control_servo(is_open):
     if is_open:
         p.ChangeDutyCycle(SERVO_180) # Move Servo to 180 Degrees
         time.sleep(1)
+        led_green(False) # green led off and red on
         logging.info("Servo is Closed")
         is_open = False  # Set position for next toggle
     else:
         p.ChangeDutyCycle(SERVO_90) # Move Servo to 90 Degrees
         time.sleep(1)
+        led_green(True)  # green led on and red off
         logging.info("Servo is Open")
         is_open = True  # set position for next toggle
     return is_open
@@ -486,7 +488,6 @@ def track():
                             enter = 0  # Reset enter counter
                             leave = 0  # Reset leave counter
                             # Toggle Servo position
-                            led_green(servo_open)
                             servo_open = control_servo(servo_open)
                             if enter > 3 or leave > 3:
                                 light_timer = light_timer - 1
