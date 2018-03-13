@@ -39,7 +39,7 @@ import datetime
 from threading import Thread
 import cv2
 
-PROG_VER = "ver 1.07"
+PROG_VER = "ver 1.08"
 # Find the full path of this python script
 PROG_PATH = os.path.abspath(__file__)
 # get the path location only (excluding script name)
@@ -99,7 +99,7 @@ if  DEVICE_CONTROL_ON:
     SERVO_90 = 7.5  #  Set Duty Cycle for 90 Degrees
     SERVO_180 = 12.5  # Set Duty Cycle for 180 Degrees
     # Initialize servo pwm and led status
-    GPIO.setmode(GPIO.BCM)
+    GPIO.setmode(GPIO.BOARD)
     GPIO.setwarnings(False)
     GPIO.setup(SERVO_PIN, GPIO.OUT)
     p = GPIO.PWM(SERVO_PIN, SERVO_FREQ)
@@ -204,9 +204,10 @@ def timer_on(change_time, duration):
     right_now = datetime.datetime.now()
     time_diff = (right_now - change_time).total_seconds()
     if time_diff > duration:
-        return True
+        start = True
     else:
-        return False
+        start = False
+    return start
 
 #------------------------------------------------------------------------------
 class PiVideoStream:
