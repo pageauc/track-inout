@@ -401,7 +401,7 @@ def track():
     green_time = datetime.datetime.now() + light_timer
     logging.info("light_timer = %i", light_timer)
     servo_open = True
-    green_on(True)
+    led_green(True)
     while still_scanning:
         # initialize variables
         motion_found = False
