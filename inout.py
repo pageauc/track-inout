@@ -39,7 +39,7 @@ import datetime
 from threading import Thread
 import cv2
 
-PROG_VER = "ver 1.01"
+PROG_VER = "ver 1.02"
 # Find the full path of this python script
 PROG_PATH = os.path.abspath(__file__)
 # get the path location only (excluding script name)
@@ -175,17 +175,17 @@ def control_servo(is_open):
     if is_open:
         p.ChangeDutyCycle(SERVO_180) # Move Servo to 180 Degrees
         time.sleep(1)
-        logging.info("Servo is Closed")        
+        logging.info("Servo is Closed")
         is_open = False  # Set position for next toggle
     else:
         p.ChangeDutyCycle(SERVO_90) # Move Servo to 90 Degrees
         time.sleep(1)
-        logging.info("Servo is Open")        
+        logging.info("Servo is Open")
         is_open = True  # set position for next toggle
     return is_open
 
 #------------------------------------------------------------------------------
-def check_timer(change_time, duration):
+def timer_on(change_time, duration):
     right_now = datetime.datetime.now()
     time_diff = (right_now - change_time).total_seconds()
     if time_diff > duration:
@@ -195,19 +195,16 @@ def check_timer(change_time, duration):
 
 #------------------------------------------------------------------------------
 def led_green(green_on):
-    """ Check if LIGHT_TIMER has expired """
+    """ Set green and red leds based on servo position """
     if green_on:
-        GPIO.output(LED_GREEN_PIN, GPIO.LOW) # Green LED off
-        GPIO.output(LED_RED_PIN, GPIO.HIGH)  # Red LED on
-        # code to turn green LED OFF and red LED ON
-        green_on = False
-        logging.info("Light is RED")
+        GPIO.output(LED_GREEN_PIN, GPIO.HIGH) # Green LED off
+        GPIO.output(LED_RED_PIN, GPIO.LOW)  # Red LED on
+        logging.info("Light is GREEN")
     else:
         # code to turn green LED ON and red LED OFF
-        GPIO.output(LED_GREEN_PIN, GPIO.HIGH) # Green LED on
-        GPIO.output(LED_RED_PIN, GPIO.LOW)    # Red LED Off
-        green_on = True
-        logging.info("Light is GREEN")
+        GPIO.output(LED_GREEN_PIN, GPIO.LOW) # Green LED on
+        GPIO.output(LED_RED_PIN, GPIO.HIGH)    # Red LED Off
+        logging.info("Light is RED")
 
 #------------------------------------------------------------------------------
 class PiVideoStream:
@@ -402,7 +399,7 @@ def track():
     green_time = datetime.datetime.now() + light_timer
     logging.info("light_timer = %i", light_timer)
     servo_open = True
-    green_on(servo_open)
+    green_on(True)
     while still_scanning:
         # initialize variables
         motion_found = False
@@ -485,12 +482,12 @@ def track():
                     # the control_device function and reset the
                     # counters based on your control_device logic
                     if DEVICE_CONTROL_ON:
-                        if check_timer(green_time, light_timer):
+                        if timer_on(green_time, light_timer):
                             enter = 0  # Reset enter counter
                             leave = 0  # Reset leave counter
                             # Toggle Servo position
-                            servo_open = control_servo(servo_open)
                             led_green(servo_open)
+                            servo_open = control_servo(servo_open)
                             if enter > 3 or leave > 3:
                                 light_timer = light_timer - 1
                                 if light_timer < 10:
