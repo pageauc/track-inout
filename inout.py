@@ -39,7 +39,7 @@ import datetime
 from threading import Thread
 import cv2
 
-PROG_VER = "ver 1.04"
+PROG_VER = "ver 1.05"
 # Find the full path of this python script
 PROG_PATH = os.path.abspath(__file__)
 # get the path location only (excluding script name)
@@ -81,8 +81,8 @@ except ImportError:
 
 # Setup GPIO for a Servo. Customize pin and Freq per variables
 if  DEVICE_CONTROL_ON:
-    # IMPORTANT - You need to setup a servo on appropriate
-    # GPIO pin.  This is sample code only.
+    # IMPORTANT - You need to setup a servo and LED's on appropriate
+    # GPIO pins.  This is sample code only.
     try:
         import RPi.GPIO as GPIO
     except ImportError:
@@ -494,7 +494,8 @@ def track():
                                 if light_timer < 10:
                                     logging.info("light_timer is at min value")
                                     light_timer = 10
-                                logging.info("light_timer = %i", light_timer)
+                                logging.info("Changed light_timer to %i sec",
+                                             light_timer)
                             green_time = datetime.datetime.now() + light_timer
                     if INOUT_REVERSE:
                         logging.info("leave=%i enter=%i Diff=%i",
