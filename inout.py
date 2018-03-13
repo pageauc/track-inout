@@ -39,7 +39,7 @@ import datetime
 from threading import Thread
 import cv2
 
-PROG_VER = "ver 1.03"
+PROG_VER = "ver 1.04"
 # Find the full path of this python script
 PROG_PATH = os.path.abspath(__file__)
 # get the path location only (excluding script name)
@@ -495,6 +495,7 @@ def track():
                                     logging.info("light_timer is at min value")
                                     light_timer = 10
                                 logging.info("light_timer = %i", light_timer)
+                            green_time = datetime.datetime.now() + light_timer
                     if INOUT_REVERSE:
                         logging.info("leave=%i enter=%i Diff=%i",
                                      leave, enter, abs(enter-leave))
