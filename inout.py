@@ -39,7 +39,7 @@ import datetime
 from threading import Thread
 import cv2
 
-PROG_VER = "ver 1.00"
+PROG_VER = "ver 1.01"
 # Find the full path of this python script
 PROG_PATH = os.path.abspath(__file__)
 # get the path location only (excluding script name)
@@ -176,10 +176,12 @@ def control_servo(is_open):
         logging.info("Control Servo Closed")
         p.ChangeDutyCycle(SERVO_180) # Move Servo to 180 Degrees
         time.sleep(1)
+        is_open = False
     else:
         logging.info("Control Servo Open")
         p.ChangeDutyCycle(SERVO_90) # Move Servo to 90 Degrees
         time.sleep(1)
+        is_open = True
     return is_open
 
 #------------------------------------------------------------------------------
