@@ -39,7 +39,7 @@ import datetime
 from threading import Thread
 import cv2
 
-PROG_VER = "ver 1.05"
+PROG_VER = "ver 1.06"
 # Find the full path of this python script
 PROG_PATH = os.path.abspath(__file__)
 # get the path location only (excluding script name)
@@ -167,6 +167,19 @@ FRAME_COUNTER = 1000  # used when SHOW_FPS=True  Sets frequency of display
 QUOTE = '"'  # Used for creating quote delimited log file of speed data
 
 #------------------------------------------------------------------------------
+def led_green(green_on):
+    """ Set green and red leds based on servo position """
+    if green_on:
+        GPIO.output(LED_GREEN_PIN, GPIO.HIGH) # Green LED on
+        GPIO.output(LED_RED_PIN, GPIO.LOW)    # Red LED off
+        logging.info("Light is GREEN")
+    else:
+        # code to turn green LED ON and red LED OFF
+        GPIO.output(LED_GREEN_PIN, GPIO.LOW) # Green LED off
+        GPIO.output(LED_RED_PIN, GPIO.HIGH)  # Red LED on
+        logging.info("Light is RED")
+
+#------------------------------------------------------------------------------
 def control_servo(is_open):
     """
     Sample Code to toggle servo open or closed based on boolean
@@ -194,19 +207,6 @@ def timer_on(change_time, duration):
         return True
     else:
         return False
-
-#------------------------------------------------------------------------------
-def led_green(green_on):
-    """ Set green and red leds based on servo position """
-    if green_on:
-        GPIO.output(LED_GREEN_PIN, GPIO.HIGH) # Green LED on
-        GPIO.output(LED_RED_PIN, GPIO.LOW)    # Red LED off
-        logging.info("Light is GREEN")
-    else:
-        # code to turn green LED ON and red LED OFF
-        GPIO.output(LED_GREEN_PIN, GPIO.LOW) # Green LED off
-        GPIO.output(LED_RED_PIN, GPIO.HIGH)  # Red LED on
-        logging.info("Light is RED")
 
 #------------------------------------------------------------------------------
 class PiVideoStream:
