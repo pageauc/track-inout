@@ -39,7 +39,7 @@ import datetime
 from threading import Thread
 import cv2
 
-PROG_VER = "ver 0.99"
+PROG_VER = "ver 1.00"
 # Find the full path of this python script
 PROG_PATH = os.path.abspath(__file__)
 # get the path location only (excluding script name)
@@ -79,7 +79,7 @@ except ImportError:
     print("ERROR - Problem importing %s" % CONFIG_FILE_PATH)
     quit(1)
 
-# Setup GPIO for a Servo. Customize pin and Freq per variables     
+# Setup GPIO for a Servo. Customize pin and Freq per variables
 if  DEVICE_CONTROL_ON:
     # IMPORTANT - You need to setup a servo on appropriate
     # GPIO pin.  This is sample code only.
@@ -88,16 +88,31 @@ if  DEVICE_CONTROL_ON:
     except ImportError:
         print("ERROR - Problem importing RPi.GPIO library")
         quit(1)
+    # LED control variables
+    LIGHT_TIMER = 60
+    LED_GREEN_PIN = 17
+    LED_RED_PIN = 18
+    # SERVO control variables
     SERVO_PIN = 12  # Set gpio pin to control servo
     SERVO_FREQ = 50  # Set Frequency for servo control
     SERVO_0 = 2.5  # Set Duty Cycle for Servo at 0 degrees
     SERVO_90 = 7.5  #  Set Duty Cycle for 90 Degrees
-    SERVO_180 = 12.5  # Set Duty Cycle for 180 Degrees  
-    GPIO.setmode(GPIO.BOARD)
+    SERVO_180 = 12.5  # Set Duty Cycle for 180 Degrees
+    # Initialize servo pwm and led status
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setwarnings(False)
     GPIO.setup(SERVO_PIN, GPIO.OUT)
     p = GPIO.PWM(SERVO_PIN, SERVO_FREQ)
-    p.start(SERVO_90)    # Set servo in Neutral Position
-    
+    GPIO.setup(LED_RED_PIN, GPIO.OUT)
+    GPIO.setup(LED_GREEN_PIN, GPIO.OUT)
+    # Setup LED Status
+    GPIO.output(LED_GREEN_PIN, GPIO.HIGH) # Green LED on
+    GPIO.output(LED_RED_PIN, GPIO.LOW)    # Red LED Off
+    logging.info("Light is GREEN")
+    # Setup Servo Status
+    p.start(SERVO_90)    # Set servo in Neutral 90 Position
+    logging.info("Servo is Open at 90")
+
 # Bypass loading picamera library if not available eg. UNIX or WINDOWS
 try:
     from picamera.array import PiRGBArray
@@ -152,20 +167,45 @@ FRAME_COUNTER = 1000  # used when SHOW_FPS=True  Sets frequency of display
 QUOTE = '"'  # Used for creating quote delimited log file of speed data
 
 #------------------------------------------------------------------------------
-def control_device(in_count, out_count):
+def control_servo(is_open):
     """
-    Sample Code to Control a servo based on in-out counter
-    You can also reset counter if required
+    Sample Code to toggle servo open or closed based on boolean
+    is_open variable
     """
-    # You can set 3 to a variable controlled from config.py
-    in_trigger = 3
-    out_trigger = 3
-    if in_count > in_trigger or out_count > out_trigger:
-        logging.info("Control Servo Down since in > %i or out > %i Exceeded",
-                     in_trigger, out_trigger)
+    if is_open:
+        logging.info("Control Servo Closed")
         p.ChangeDutyCycle(SERVO_180) # Move Servo to 180 Degrees
         time.sleep(1)
-    return in_count, out_count
+    else:
+        logging.info("Control Servo Open")
+        p.ChangeDutyCycle(SERVO_90) # Move Servo to 90 Degrees
+        time.sleep(1)
+    return is_open
+
+#------------------------------------------------------------------------------
+def check_timer(change_time, duration):
+    right_now = datetime.datetime.now()
+    time_diff = (right_now - change_time).total_seconds()
+    if time_diff > duration:
+        return True
+    else:
+        return False
+
+#------------------------------------------------------------------------------
+def led_green(green_on):
+    """ Check if LIGHT_TIMER has expired """
+    if green_on:
+        GPIO.output(LED_GREEN_PIN, GPIO.LOW) # Green LED off
+        GPIO.output(LED_RED_PIN, GPIO.HIGH)  # Red LED on
+        # code to turn green LED OFF and red LED ON
+        green_on = False
+        logging.info("Light is RED")
+    else:
+        # code to turn green LED ON and red LED OFF
+        GPIO.output(LED_GREEN_PIN, GPIO.HIGH) # Green LED on
+        GPIO.output(LED_RED_PIN, GPIO.LOW)    # Red LED Off
+        green_on = True
+        logging.info("Light is GREEN")
 
 #------------------------------------------------------------------------------
 class PiVideoStream:
@@ -355,6 +395,12 @@ def track():
     move_time = time.time()
     enter = 0
     leave = 0
+    # Data for Controlling LED
+    light_timer = LIGHT_TIMER
+    green_time = datetime.datetime.now() + light_timer
+    logging.info("light_timer = %i", light_timer)
+    servo_open = True
+    green_on(servo_open)
     while still_scanning:
         # initialize variables
         motion_found = False
@@ -437,7 +483,18 @@ def track():
                     # the control_device function and reset the
                     # counters based on your control_device logic
                     if DEVICE_CONTROL_ON:
-                        leave, enter = control_device(leave, enter)
+                        if check_timer(green_time, light_timer):
+                            enter = 0  # Reset enter counter
+                            leave = 0  # Reset leave counter
+                            # Toggle Servo position
+                            servo_open = control_servo(servo_open)
+                            led_green(servo_open)
+                            if enter > 3 or leave > 3:
+                                light_timer = light_timer - 1
+                                if light_timer < 10:
+                                    logging.info("light_timer is at min value")
+                                    light_timer = 10
+                                logging.info("light_timer = %i", light_timer)
                     if INOUT_REVERSE:
                         logging.info("leave=%i enter=%i Diff=%i",
                                      leave, enter, abs(enter-leave))
