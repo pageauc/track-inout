@@ -173,15 +173,15 @@ def control_servo(is_open):
     is_open variable
     """
     if is_open:
-        logging.info("Control Servo Closed")
         p.ChangeDutyCycle(SERVO_180) # Move Servo to 180 Degrees
         time.sleep(1)
-        is_open = False
+        logging.info("Servo is Closed")        
+        is_open = False  # Set position for next toggle
     else:
-        logging.info("Control Servo Open")
         p.ChangeDutyCycle(SERVO_90) # Move Servo to 90 Degrees
         time.sleep(1)
-        is_open = True
+        logging.info("Servo is Open")        
+        is_open = True  # set position for next toggle
     return is_open
 
 #------------------------------------------------------------------------------
