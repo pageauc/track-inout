@@ -1,5 +1,5 @@
 # TRACK-INOUT  written by Claude Pageau
-### Tracks Enter, Leave Activity that cross a vert or horiz center line Runs on Windows or Unix using Web Cam or Raspberry Pi using Web Cam or pi camera moduleUses python, opencv to track motion in real time
+### Tracks Enter, Leave Activity that cross a vert or horiz center line. Runs on Windows or Unix using Web Cam or Raspberry Pi using Web Cam or pi camera module. Uses python, opencv to track motion in real time
 
 ### YouTube Video https://youtu.be/9et7QpbT5cc  
 
