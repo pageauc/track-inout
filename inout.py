@@ -85,21 +85,7 @@ try:
     from picamera import PiCamera
 except ImportError:
     WEBCAM = True
-# Get center line for movement counting
-if WEBCAM:
-    X_CENTER = WEBCAM_WIDTH/2
-    Y_CENTER = WEBCAM_HEIGHT/2
-    X_MAX = WEBCAM_WIDTH
-    Y_MAX = WEBCAM_HEIGHT
-    X_BUF = WEBCAM_WIDTH/10
-    Y_BUF = WEBCAM_HEIGHT/10
-else:
-    X_CENTER = CAMERA_WIDTH/2
-    Y_CENTER = CAMERA_HEIGHT/2
-    X_MAX = CAMERA_HEIGHT
-    Y_MAX = CAMERA_WIDTH
-    X_BUF = CAMERA_WIDTH/10
-    Y_BUF = CAMERA_HEIGHT/10
+
 LOG_FILE_PATH = BASE_DIR + PROG_FILENAME + ".log"
 if VERBOSE:
     print("Logging to Console per Variable VERBOSE=True")
@@ -120,6 +106,23 @@ else:
 if not os.path.isdir(IMAGE_PATH):
     logging.info("Creating Image Storage Folder %s", IMAGE_PATH)
     os.makedirs(IMAGE_PATH)
+    
+# Get center line for movement counting
+if WEBCAM:
+    X_CENTER = WEBCAM_WIDTH/2
+    Y_CENTER = WEBCAM_HEIGHT/2
+    X_MAX = WEBCAM_WIDTH
+    Y_MAX = WEBCAM_HEIGHT
+    X_BUF = WEBCAM_WIDTH/10
+    Y_BUF = WEBCAM_HEIGHT/10
+else:
+    X_CENTER = CAMERA_WIDTH/2
+    Y_CENTER = CAMERA_HEIGHT/2
+    X_MAX = CAMERA_HEIGHT
+    Y_MAX = CAMERA_WIDTH
+    X_BUF = CAMERA_WIDTH/10
+    Y_BUF = CAMERA_HEIGHT/10
+    
 # Color data for OpenCV lines and text
 CV_WHITE = (255, 255, 255)
 CV_BLACK = (0, 0, 0)
@@ -165,6 +168,7 @@ if  DEVICE_CONTROL_ON:
     # Setup Servo Status
     p.start(SERVO_90)    # Set servo in Neutral 90 Position
     logging.info("Servo is Open at 90")
+    
 #------------------------------------------------------------------------------
 def led_green(green_on):
     """ Set green and red leds based on servo position """
