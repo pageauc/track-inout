@@ -39,7 +39,7 @@ import datetime
 from threading import Thread
 import cv2
 
-PROG_VER = "ver 1.10"
+PROG_VER = "ver 1.11"
 # Find the full path of this python script
 PROG_PATH = os.path.abspath(__file__)
 # get the path location only (excluding script name)
@@ -86,13 +86,13 @@ try:
 except ImportError:
     WEBCAM = True
 
-LOG_FILE_PATH = BASE_DIR + PROG_FILENAME + ".log"
 if VERBOSE:
     print("Logging to Console per Variable VERBOSE=True")
     logging.basicConfig(level=logging.DEBUG,
                         format='%(asctime)s %(levelname)-8s %(funcName)-10s %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S')
 elif SAVE_LOG:
+    LOG_FILE_PATH = BASE_DIR + PROG_FILENAME + ".log"
     logging.basicConfig(level=logging.DEBUG,
                         format='%(asctime)s %(levelname)-8s %(funcName)-10s %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S',
@@ -103,6 +103,7 @@ else:
     logging.basicConfig(level=logging.CRITICAL,
                         format='%(asctime)s %(levelname)-8s %(funcName)-10s %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S')
+
 if not os.path.isdir(IMAGE_PATH):
     logging.info("Creating Image Storage Folder %s", IMAGE_PATH)
     os.makedirs(IMAGE_PATH)
