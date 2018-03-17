@@ -39,7 +39,7 @@ import datetime
 from threading import Thread
 import cv2
 
-PROG_VER = "ver 1.08"
+PROG_VER = "ver 1.10"
 # Find the full path of this python script
 PROG_PATH = os.path.abspath(__file__)
 # get the path location only (excluding script name)
@@ -78,40 +78,6 @@ try:
 except ImportError:
     print("ERROR - Problem importing %s" % CONFIG_FILE_PATH)
     quit(1)
-
-# Setup GPIO for a Servo. Customize pin and Freq per variables
-if  DEVICE_CONTROL_ON:
-    # IMPORTANT - You need to setup a servo and LED's on appropriate
-    # GPIO pins.  This is sample code only.
-    try:
-        import RPi.GPIO as GPIO
-    except ImportError:
-        print("ERROR - Problem importing RPi.GPIO library")
-        quit(1)
-    # LED control variables
-    LIGHT_TIMER = 60
-    LED_GREEN_PIN = 11
-    LED_RED_PIN = 13
-    # SERVO control variables
-    SERVO_PIN = 12  # Set gpio pin to control servo
-    SERVO_FREQ = 50  # Set Frequency for servo control
-    SERVO_0 = 2.5  # Set Duty Cycle for Servo at 0 degrees
-    SERVO_90 = 7.5  #  Set Duty Cycle for 90 Degrees
-    SERVO_180 = 12.5  # Set Duty Cycle for 180 Degrees
-    # Initialize servo pwm and led status
-    GPIO.setmode(GPIO.BOARD)
-    GPIO.setwarnings(False)
-    GPIO.setup(SERVO_PIN, GPIO.OUT)
-    p = GPIO.PWM(SERVO_PIN, SERVO_FREQ)
-    GPIO.setup(LED_RED_PIN, GPIO.OUT)
-    GPIO.setup(LED_GREEN_PIN, GPIO.OUT)
-    # Setup LED Status
-    GPIO.output(LED_GREEN_PIN, GPIO.HIGH) # Green LED on
-    GPIO.output(LED_RED_PIN, GPIO.LOW)    # Red LED Off
-    logging.info("Light is GREEN")
-    # Setup Servo Status
-    p.start(SERVO_90)    # Set servo in Neutral 90 Position
-    logging.info("Servo is Open at 90")
 
 # Bypass loading picamera library if not available eg. UNIX or WINDOWS
 try:
@@ -166,6 +132,39 @@ TEXT_FONT = cv2.FONT_HERSHEY_SIMPLEX
 FRAME_COUNTER = 1000  # used when SHOW_FPS=True  Sets frequency of display
 QUOTE = '"'  # Used for creating quote delimited log file of speed data
 
+# Setup GPIO for a Servo. Customize pin and Freq per variables
+if  DEVICE_CONTROL_ON:
+    # IMPORTANT - You need to setup a servo and LED's on appropriate
+    # GPIO pins.  This is sample code only.
+    try:
+        import RPi.GPIO as GPIO
+    except ImportError:
+        print("ERROR - Problem importing RPi.GPIO library")
+        quit(1)
+    # LED control variables
+    LIGHT_TIMER = 60
+    LED_GREEN_PIN = 11
+    LED_RED_PIN = 13
+    # SERVO control variables
+    SERVO_PIN = 12  # Set gpio pin to control servo
+    SERVO_FREQ = 50  # Set Frequency for servo control
+    SERVO_0 = 2.5  # Set Duty Cycle for Servo at 0 degrees
+    SERVO_90 = 7.5  #  Set Duty Cycle for 90 Degrees
+    SERVO_180 = 12.5  # Set Duty Cycle for 180 Degrees
+    # Initialize servo pwm and led status
+    GPIO.setmode(GPIO.BOARD)
+    GPIO.setwarnings(False)
+    GPIO.setup(SERVO_PIN, GPIO.OUT)
+    p = GPIO.PWM(SERVO_PIN, SERVO_FREQ)
+    GPIO.setup(LED_RED_PIN, GPIO.OUT)
+    GPIO.setup(LED_GREEN_PIN, GPIO.OUT)
+    # Setup LED Status
+    GPIO.output(LED_GREEN_PIN, GPIO.HIGH) # Green LED on
+    GPIO.output(LED_RED_PIN, GPIO.LOW)    # Red LED Off
+    logging.info("Light is GREEN")
+    # Setup Servo Status
+    p.start(SERVO_90)    # Set servo in Neutral 90 Position
+    logging.info("Servo is Open at 90")
 #------------------------------------------------------------------------------
 def led_green(green_on):
     """ Set green and red leds based on servo position """
