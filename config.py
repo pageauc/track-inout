@@ -1,19 +1,24 @@
-# Config.py file for inout.py  Release 0.94
+# Config.py file for inout.py  Release 1.2
 
 # Display Settings
 # ----------------
+WINDOW_ON = False       # Set to True displays opencv windows (GUI desktop reqd)
+                        # Need HDTV or Monitor connected to RPI HDMI port.
 DEVICE_CONTROL_ON = False  # True=On False=Off enable/disable device_control function code
 VERBOSE = True          # Set to False to suppress console logging messages
-SAVE_LOG = False        # Send console log messages to a log file instead of screen
-SAVE_CSV_FILE = False   # save CSV data file
-SAVE_IMAGES = True      # save image when leave or enter activated
-WINDOW_ON = False       # Set to True displays opencv windows (GUI desktop reqd)
-SHOW_MOVES = False      # show detailed x,y tracking movement data
-SHOW_FPS = False        # Show Frames per second
+
+# Settings for in out
 CENTER_LINE_VERT = True # True=Vert False=horiz centerline trigger orientation
 INOUT_REVERSE = False   # reverse Enter and Leave orientation
 IMAGE_PATH = "media/images"  # Folder for storing images (rel or abs)
 MOVE_LIST_TIMEOUT = 0.5  # wait seconds with no motion then clear movelist
+
+# Settings for Logging and Messages
+SAVE_LOG = False        # Send console log messages to a log file instead of screen
+SAVE_CSV_FILE = False   # save CSV data file
+SAVE_IMAGES = True      # save image when leave or enter activated
+SHOW_MOVES = False      # show detailed x,y tracking movement data
+SHOW_FPS = False        # Show Frames per second
 
 # Camera Settings
 # ---------------
@@ -48,6 +53,23 @@ WINDOW_BIGGER = 2   # Resize multiplier for Movement Status Window
                     # Note if the window is larger than 1 then a reduced frame rate will occur
 THRESHOLD_SENSITIVITY = 25
 BLUR_SIZE = 10
+
+# When variable DEVICE_CONTROL_ON = True
+# Use these settings if you wish to use the Device Control Option
+# Stop Light and Gate controlled by servo
+
+# LED control variables
+LIGHT_TIMER = 60
+LED_GREEN_PIN = 11
+LED_RED_PIN = 13
+
+# SERVO control variables
+SERVO_PIN = 12  # Set gpio pin to control servo
+SERVO_FREQ = 50  # Set Frequency for servo control
+SERVO_0 = 2.5  # Set Duty Cycle for Servo at 0 degrees
+SERVO_90 = 7.5  #  Set Duty Cycle for 90 Degrees
+SERVO_180 = 12.5  # Set Duty Cycle for 180 Degrees
+
 
 #======================================
 #       webserver.py Settings

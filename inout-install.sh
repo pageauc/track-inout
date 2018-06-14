@@ -1,6 +1,6 @@
 #!/bin/bash
 # Convenient track-inout motion-track-install.sh script written by Claude Pageau 1-Jul-2016
-ver="0.7"
+ver="1.2"
 APP_DIR='track-inout'  # Default folder install location
 
 cd ~
@@ -29,10 +29,10 @@ echo "  $STATUS track-inout Track Enter Leave Activity"
 echo "------------------------------------------------"
 echo ""
 echo "1 - Downloading GitHub Repo files to $INSTALL_PATH"
-wget -O media/webserver.txt -q --show-progress https://raw.githubusercontent.com/pageauc/track-inout/master/webserver.txt
-wget -O inout-install.sh -q --show-progress https://raw.githubusercontent.com/pageauc/track-inout/master/inout-install.sh
+
+
+  wget -O inout.py -q --show-progress https://raw.githubusercontent.com/pageauc/track-inout/master/inout.py
 if [ $? -ne 0 ] ;  then
-  wget -O inout-install.sh https://raw.githubusercontent.com/pageauc/track-inout/master/inout-install.sh
   wget -O inout.py https://raw.githubusercontent.com/pageauc/track-inout/master/inout.py
   wget -O inout.sh https://raw.githubusercontent.com/pageauc/track-inout/master/inout.sh
   wget -O config.py https://raw.githubusercontent.com/pageauc/track-inout/master/config.py
@@ -42,13 +42,13 @@ if [ $? -ne 0 ] ;  then
   wget -O webserver.sh https://raw.githubusercontent.com/pageauc/track-inout/master/webserver.sh
   wget -O media/webserver.txt https://raw.githubusercontent.com/pageauc/track-inout/master/webserver.txt
 else
-  wget -O inout.py -q --show-progress https://raw.githubusercontent.com/pageauc/track-inout/master/inout.py
   wget -O inout.sh -q --show-progress https://raw.githubusercontent.com/pageauc/track-inout/master/inout.sh
   wget -O config.py -q --show-progress https://raw.githubusercontent.com/pageauc/track-inout/master/config.py
   wget -O config-240.py -q --show-progress https://raw.githubusercontent.com/pageauc/track-inout/master/config-240.py
   wget -O Readme.md -q --show-progress https://raw.githubusercontent.com/pageauc/track-inout/master/Readme.md
   wget -O webserver.py -q --show-progress https://raw.githubusercontent.com/pageauc/track-inout/master/webserver.py
   wget -O webserver.sh -q --show-progress https://raw.githubusercontent.com/pageauc/track-inout/master/webserver.sh
+  wget -O media/webserver.txt -q --show-progress https://raw.githubusercontent.com/pageauc/track-inout/master/webserver.txt
 fi
 echo "Done Download"
 echo "------------------------------------------------"
