@@ -84,7 +84,6 @@ web_page_refresh_on = False   # False=Off (never)  Refresh True=On (per seconds 
 web_page_refresh_sec = "180"  # default= "180" seconds to wait for web page refresh  seconds (three minutes)
 web_page_blank = True         # True Starts left image with a blank page until a right menu item is selected
                               # False displays second list[1] item since first may be in progress
-
 # Left iFrame Image Settings
 # --------------------------
 web_image_height = "768"       # default= "768" px height of images to display in iframe

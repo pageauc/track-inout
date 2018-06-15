@@ -30,9 +30,9 @@ How to Run
     ./inout.py
 
 """
-PROG_VER = "ver 1.2"
-
 from __future__ import print_function
+
+PROG_VER = "ver 1.21"
 print("Loading ...")
 # import python libraries
 import logging
