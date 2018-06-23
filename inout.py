@@ -32,7 +32,7 @@ How to Run
 """
 from __future__ import print_function
 
-PROG_VER = "ver 1.21"
+PROG_VER = "ver 1.3"
 print("Loading ...")
 # import python libraries
 import logging
@@ -48,6 +48,12 @@ PROG_PATH = os.path.abspath(__file__)
 BASE_DIR = PROG_PATH[0:PROG_PATH.rfind("/")+1]
 PROG_FILENAME = PROG_PATH[PROG_PATH.rfind("/")+1:PROG_PATH.rfind(".")]
 PROG_NAME = os.path.basename(__file__)
+
+BUFFER_SETTING = 5   # This controls value for x_buf and y_buf for buffer space prior to
+                     # crossing line. Avoids counting something turning around or variations
+                     # in contour tracking.
+if BUFFER_SETTING <= 3:  # Make sure value is Not Too Small
+    BUFFER_SETTING = 3
 
 # Color data for OpenCV lines and text
 CV_WHITE = (255, 255, 255)
@@ -130,15 +136,15 @@ if WEBCAM:
     Y_CENTER = WEBCAM_HEIGHT/2
     X_MAX = WEBCAM_WIDTH
     Y_MAX = WEBCAM_HEIGHT
-    X_BUF = WEBCAM_WIDTH/10
-    Y_BUF = WEBCAM_HEIGHT/10
+    X_BUF = int(WEBCAM_WIDTH/BUFFER_SETTING)
+    Y_BUF = int(WEBCAM_HEIGHT/BUFFER_SETTING)
 else:
     X_CENTER = CAMERA_WIDTH/2
     Y_CENTER = CAMERA_HEIGHT/2
     X_MAX = CAMERA_HEIGHT
     Y_MAX = CAMERA_WIDTH
-    X_BUF = CAMERA_WIDTH/10
-    Y_BUF = CAMERA_HEIGHT/10
+    X_BUF = int(CAMERA_WIDTH/BUFFER_SETTING)
+    Y_BUF = int(CAMERA_HEIGHT/BUFFER_SETTING)
 
 # Setup GPIO for a Servo. Customize pin and Freq per variables
 if  DEVICE_CONTROL_ON:
