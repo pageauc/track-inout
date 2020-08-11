@@ -49,7 +49,7 @@ BASE_DIR = PROG_PATH[0:PROG_PATH.rfind("/")+1]
 PROG_FILENAME = PROG_PATH[PROG_PATH.rfind("/")+1:PROG_PATH.rfind(".")]
 PROG_NAME = os.path.basename(__file__)
 
-BUFFER_SETTING = 5   # This controls value for x_buf and y_buf for buffer space prior to
+BUFFER_SETTING = 6   # This controls value for x_buf and y_buf for buffer space prior to
                      # crossing line. Avoids counting something turning around or variations
                      # in contour tracking.
 if BUFFER_SETTING <= 3:  # Make sure value is Not Too Small
